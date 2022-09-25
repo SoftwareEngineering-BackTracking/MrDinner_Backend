@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class testController {
-    // 마스터일 때
     @GetMapping("/api")
     @ResponseBody
     public String testapi(@RequestParam String req){
