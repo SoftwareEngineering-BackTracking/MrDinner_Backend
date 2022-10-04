@@ -15,6 +15,9 @@ public class UserCreateRequestDto {
     private String phoneNumber;
     private String email;
     private String nickname;
+    // 0 -> 고객
+    // 1 -> 직원
+    // 2 -> 비회원
     private int department;
 
     public User toEntity(){

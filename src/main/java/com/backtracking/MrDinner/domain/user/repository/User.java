@@ -47,4 +47,11 @@ public class User {
         this.nickname = nickname;
         this.department =department;
     }
+
+    public void update(String name, String phoneNumber, String email, String nickname){
+        this.name = name;
+        this.phoneNumber = phoneNumber;
+        this.email = email;
+        this.nickname = nickname;
+    }
 }

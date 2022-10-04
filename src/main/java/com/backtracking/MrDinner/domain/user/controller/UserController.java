@@ -1,16 +1,14 @@
 package com.backtracking.MrDinner.domain.user.controller;
 
-import com.backtracking.MrDinner.domain.user.dto.UserCreateRequestDto;
-import com.backtracking.MrDinner.domain.user.dto.UserCreateResponseDto;
+import com.backtracking.MrDinner.domain.user.dto.*;
+import com.backtracking.MrDinner.domain.user.repository.User;
 import com.backtracking.MrDinner.domain.user.service.UserSerivce;
 import com.backtracking.MrDinner.global.dto.DtoMetaData;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RequestMapping("/api/user")
@@ -32,6 +30,54 @@ public class UserController {
         catch (Exception e){
             dtoMetaData = new DtoMetaData(e.getMessage(), e.getClass().getName());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new UserCreateResponseDto(dtoMetaData));
+        }
+    }
+
+    // 계정 조회
+    @GetMapping
+    public ResponseEntity<UserFetchResponseDto> fetchUser(@RequestBody UserFetchRequestDto requestDto){
+        DtoMetaData dtoMetaData;
+
+        try{
+            User user = userSerivce.fetchUser(requestDto);
+            dtoMetaData = new DtoMetaData("계정 조회 성공");
+            return ResponseEntity.ok(new UserFetchResponseDto(dtoMetaData, user));
+        }
+        catch(Exception e){
+            dtoMetaData = new DtoMetaData(e.getMessage(), e.getClass().getName());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new UserFetchResponseDto(dtoMetaData));
+        }
+    }
+
+    // 계정 수정
+    @PutMapping
+    public ResponseEntity<UserUpdateResponseDto> updateUser(@RequestBody UserUpdateRequestDto requestDto){
+        DtoMetaData dtoMetaData;
+
+        try{
+            userSerivce.updateUser(requestDto);
+            dtoMetaData = new DtoMetaData("계정 수정 성공");
+            return ResponseEntity.ok(new UserUpdateResponseDto(dtoMetaData));
+        }
+        catch (Exception e){
+            dtoMetaData = new DtoMetaData(e.getMessage(), e.getClass().getName());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new UserUpdateResponseDto(dtoMetaData));
+        }
+    }
+
+    // 계정 삭제
+    @DeleteMapping
+    public ResponseEntity<UserDeleteResponseDto> deleteUser(@RequestBody UserDeleteRequestDto requestDto){
+        DtoMetaData dtoMetaData;
+
+        try{
+            userSerivce.deleteUser(requestDto);
+            dtoMetaData = new DtoMetaData("계정 삭제 완료");
+            return ResponseEntity.ok(new UserDeleteResponseDto(dtoMetaData));
+        }
+        catch (Exception e){
+            dtoMetaData = new DtoMetaData(e.getMessage(), e.getClass().getName());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new UserDeleteResponseDto(dtoMetaData));
         }
     }
 }
