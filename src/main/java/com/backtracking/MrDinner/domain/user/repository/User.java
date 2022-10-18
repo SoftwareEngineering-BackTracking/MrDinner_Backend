@@ -1,13 +1,12 @@
 package com.backtracking.MrDinner.domain.user.repository;
 
+import com.backtracking.MrDinner.global.enumpackage.Department;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Getter
 @Setter
@@ -34,11 +33,11 @@ public class User {
     @Column
     private String nickname;
 
-    @Column
-    private int department;
+    @Enumerated(EnumType.STRING)
+    private Department department;
 
     @Builder
-    public User(String id, String password, String name, String phoneNumber, String email, String nickname, int department){
+    public User(String id, String password, String name, String phoneNumber, String email, String nickname, Department department){
         this.id = id;
         this.password = password;
         this.name = name;
@@ -53,5 +52,9 @@ public class User {
         this.phoneNumber = phoneNumber;
         this.email = email;
         this.nickname = nickname;
+    }
+
+    public void passwordUpdate(String password){
+        this.password = password;
     }
 }

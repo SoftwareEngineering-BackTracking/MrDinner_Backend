@@ -4,17 +4,20 @@ import com.backtracking.MrDinner.domain.user.dto.*;
 import com.backtracking.MrDinner.domain.user.repository.User;
 import com.backtracking.MrDinner.domain.user.service.UserSerivce;
 import com.backtracking.MrDinner.global.dto.DtoMetaData;
+import com.backtracking.MrDinner.global.enumpackage.Department;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @RequestMapping("/api/user")
 @Controller
 public class UserController {
-
+    private Department department;
     private final UserSerivce userSerivce;
 
     // 계정 생성
@@ -39,9 +42,21 @@ public class UserController {
         DtoMetaData dtoMetaData;
 
         try{
-            User user = userSerivce.fetchUser(requestDto);
-            dtoMetaData = new DtoMetaData("계정 조회 성공");
-            return ResponseEntity.ok(new UserFetchResponseDto(dtoMetaData, user));
+            if(requestDto.getId() != null){
+                User user = userSerivce.fetchUser(requestDto);
+                dtoMetaData = new DtoMetaData("계정 조회 성공");
+                return ResponseEntity.ok(new UserFetchResponseDto(dtoMetaData, user));
+            }
+            else if(requestDto.getName() != null || requestDto.getDepartment() == department.고객 || requestDto.getDepartment() == department.직원 || requestDto.getDepartment() == department.비회원){
+                List<User> userList = userSerivce.fetchFilterUser(requestDto);
+                dtoMetaData = new DtoMetaData("계정 필터별 조회 성공");
+                return ResponseEntity.ok(new UserFetchResponseDto(dtoMetaData, userList));
+            }
+            else{
+                List<User> userList = userSerivce.fetchAllUser(requestDto);
+                dtoMetaData = new DtoMetaData("모든 계정 조회 성공");
+                return ResponseEntity.ok(new UserFetchResponseDto(dtoMetaData, userList));
+            }
         }
         catch(Exception e){
             dtoMetaData = new DtoMetaData(e.getMessage(), e.getClass().getName());

@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
-@AllArgsConstructor
-public class UserCreateResponseDto {
-        private DtoMetaData dtoMetaData;
+public class LoginRequestDto {
+    private String id;
+    private String password;
 }

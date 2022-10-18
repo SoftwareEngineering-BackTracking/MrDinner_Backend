@@ -2,6 +2,7 @@ package com.backtracking.MrDinner.domain.user.dto;
 
 import com.backtracking.MrDinner.domain.user.repository.User;
 import com.backtracking.MrDinner.global.dto.DtoMetaData;
+import com.backtracking.MrDinner.global.enumpackage.Department;
 import lombok.Data;
 
 import javax.persistence.Column;
@@ -18,7 +19,7 @@ public class UserCreateRequestDto {
     // 0 -> 고객
     // 1 -> 직원
     // 2 -> 비회원
-    private int department;
+    private Department department;
 
     public User toEntity(){
         return User.builder()
