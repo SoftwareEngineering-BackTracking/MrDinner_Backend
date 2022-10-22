@@ -1,5 +1,6 @@
 package com.backtracking.MrDinner.domain.user.repository;
 
+import com.backtracking.MrDinner.global.Entitiy.BaseEntity;
 import com.backtracking.MrDinner.global.enumpackage.Department;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,7 +13,7 @@ import javax.persistence.*;
 @Setter
 @NoArgsConstructor
 @Entity
-public class User {
+public class User extends BaseEntity {
 
     @Id
     private String id;
