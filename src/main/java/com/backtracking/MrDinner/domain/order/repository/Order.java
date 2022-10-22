@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.servlet.http.HttpSession;
+
 import com.backtracking.MrDinner.global.enumpackage.Dinner;
 import com.backtracking.MrDinner.global.enumpackage.Style;
 @Entity
@@ -29,4 +31,10 @@ public class Order {
     @Column
     private Style style;
 
+    @Builder
+    public Order(String userId, Dinner dinner, Style style){
+        this.userId = userId;
+        this.dinner = dinner;
+        this.style = style;
+    }
 }
