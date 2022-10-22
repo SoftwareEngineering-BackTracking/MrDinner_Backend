@@ -1,6 +1,6 @@
 package com.backtracking.MrDinner.domain.user.repository;
 
-import com.backtracking.MrDinner.global.Entitiy.BaseEntity;
+import com.backtracking.MrDinner.global.entitiy.BaseEntity;
 import com.backtracking.MrDinner.global.enumpackage.Department;
 import lombok.Builder;
 import lombok.Getter;

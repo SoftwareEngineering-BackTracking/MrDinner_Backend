@@ -1,4 +1,4 @@
-package com.backtracking.MrDinner.global.Entitiy;
+package com.backtracking.MrDinner.global.entitiy;
 
 import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;
