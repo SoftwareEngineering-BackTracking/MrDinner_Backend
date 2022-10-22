@@ -36,7 +36,6 @@ public class AuthService {
         }
         // 로그인 성공시 세션 저장
         session.setAttribute("id", requestDto.getId());
-        System.out.println((String) session.getAttribute("id"));
     }
 
     @Transactional

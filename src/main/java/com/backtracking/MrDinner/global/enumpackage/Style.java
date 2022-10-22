@@ -1,5 +1,5 @@
 package com.backtracking.MrDinner.global.enumpackage;
 
 public enum Style {
-    Simple, Grand, Deluxe
+    심플, 그랜드, 디럭스
 }

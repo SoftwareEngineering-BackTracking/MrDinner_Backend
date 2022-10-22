@@ -1,19 +1,17 @@
-package com.backtracking.MrDinner.domain.order.repository;
+package com.backtracking.MrDinner.domain.demand.repository;
 
-import com.backtracking.MrDinner.global.enumpackage.Department;
+import com.backtracking.MrDinner.global.enumpackage.Dinner;
+import com.backtracking.MrDinner.global.enumpackage.Style;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import javax.servlet.http.HttpSession;
 
-import com.backtracking.MrDinner.global.enumpackage.Dinner;
-import com.backtracking.MrDinner.global.enumpackage.Style;
 @Entity
 @NoArgsConstructor
 @Getter
-public class Order {
+public class Demand {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,15 +23,16 @@ public class Order {
     @Column
     private Long basketNo;
 
-    @Column
+    @Enumerated(EnumType.STRING)
     private Dinner dinner;
 
-    @Column
+    @Enumerated(EnumType.STRING)
     private Style style;
 
     @Builder
-    public Order(String userId, Dinner dinner, Style style){
+    public Demand(String userId, Long basketNo, Dinner dinner, Style style){
         this.userId = userId;
+        this.basketNo = basketNo;
         this.dinner = dinner;
         this.style = style;
     }
