@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.servlet.http.HttpSession;
+
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/api/auth")
@@ -53,17 +55,32 @@ public class AuthController {
     }
 
     @GetMapping("/login")
-    public ResponseEntity<LoginResponseDto> login(@RequestBody LoginRequestDto requestDto){
+    public ResponseEntity<LoginResponseDto> login(@RequestBody LoginRequestDto requestDto, HttpSession session){
         DtoMetaData dtoMetaData;
 
         try{
-            authService.login(requestDto);
+            authService.login(requestDto, session);
             dtoMetaData = new DtoMetaData("로그인 성공");
             return ResponseEntity.ok(new LoginResponseDto(dtoMetaData));
         }
         catch (Exception e){
             dtoMetaData = new DtoMetaData(e.getMessage(), e.getClass().getName());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new LoginResponseDto(dtoMetaData));
+        }
+    }
+
+    @GetMapping("/logout")
+    public ResponseEntity<LogoutResponseDto> logout(@RequestBody LogoutRequestDto requestDto, HttpSession session){
+        DtoMetaData dtoMetaData;
+
+        try{
+            authService.logout(requestDto, session);
+            dtoMetaData = new DtoMetaData("로그아웃 성공");
+            return ResponseEntity.ok(new LogoutResponseDto(dtoMetaData));
+        }
+        catch (Exception e){
+            dtoMetaData = new DtoMetaData(e.getMessage(), e.getClass().getName());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new LogoutResponseDto(dtoMetaData));
         }
     }
 
