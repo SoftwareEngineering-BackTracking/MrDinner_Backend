@@ -6,9 +6,9 @@ import lombok.Data;
 @Data
 public class UserUpdateRequestDto {
 
-    private String id;
     private String name;
     private String phoneNumber;
     private String email;
     private String nickname;
+    private String address;
 }

@@ -37,8 +37,11 @@ public class User extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Department department;
 
+    @Column
+    private String address;
+
     @Builder
-    public User(String id, String password, String name, String phoneNumber, String email, String nickname, Department department){
+    public User(String id, String password, String name, String phoneNumber, String email, String nickname, Department department, String address){
         this.id = id;
         this.password = password;
         this.name = name;
@@ -46,6 +49,7 @@ public class User extends BaseEntity {
         this.email = email;
         this.nickname = nickname;
         this.department =department;
+        this.address = address;
     }
 
     public void update(String name, String phoneNumber, String email, String nickname){
