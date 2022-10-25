@@ -1,5 +1,7 @@
 package com.backtracking.MrDinner.domain.user.service;
 
+import com.backtracking.MrDinner.domain.cart.repository.CartRepository;
+import com.backtracking.MrDinner.domain.cart.service.CartService;
 import com.backtracking.MrDinner.domain.user.dto.UserCreateRequestDto;
 import com.backtracking.MrDinner.domain.user.dto.UserDeleteRequestDto;
 import com.backtracking.MrDinner.domain.user.dto.UserFetchRequestDto;
@@ -13,7 +15,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
+import java.util.Calendar;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -21,7 +25,7 @@ import java.util.List;
 public class UserSerivce {
     private Department department;
     private final UserRepository userRepository;
-
+    private final CartService cartService;
     // 회원가입
     @Transactional
     public void createUser(UserCreateRequestDto requestDto) {
@@ -30,6 +34,7 @@ public class UserSerivce {
             throw new IllegalArgumentException("이미 가입되어 있는 유저입니다. ID: " + id);
         }
         userRepository.save(requestDto.toEntity());
+        cartService.createCart(requestDto.getId());
     }
 
     // 내 정보 보기
@@ -69,10 +74,17 @@ public class UserSerivce {
 
     // 내 정보 수정
     @Transactional
-    public void updateUser(UserUpdateRequestDto requestDto) {
-        User user = userRepository.findById(requestDto.getId()).orElseThrow(() -> new IllegalArgumentException("해당 ID를 가진 유저가 없습니다."));
+    public void updateUser(UserUpdateRequestDto requestDto, HttpSession session) {
+        User user = userRepository.findById((String) session.getAttribute("id")).orElseThrow(() -> new IllegalArgumentException("해당 ID를 가진 유저가 없습니다."));
 
         user.update(requestDto.getName(), requestDto.getPhoneNumber(), requestDto.getEmail(), requestDto.getNickname());
+    }
+
+    @Transactional
+    public void updateAddress(UserUpdateRequestDto requestDto, HttpSession session) {
+        User user = userRepository.findById((String) session.getAttribute("id")).orElseThrow(() -> new IllegalArgumentException("해당 ID를 가진 유저가 없습니다."));
+
+        user.setAddress(requestDto.getAddress());
     }
 
     // 회원 탈퇴
@@ -82,6 +94,5 @@ public class UserSerivce {
 
         userRepository.delete(user);
     }
-
 
 }
