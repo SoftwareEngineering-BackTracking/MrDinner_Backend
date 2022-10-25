@@ -15,25 +15,21 @@ public class Demand {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long orderNo;
+    private Long demandNo;
 
     @Column
     private String userId;
 
     @Column
-    private Long basketNo;
+    private Long price;
 
-    @Enumerated(EnumType.STRING)
-    private Dinner dinner;
-
-    @Enumerated(EnumType.STRING)
-    private Style style;
+    @Column
+    private String status;
 
     @Builder
-    public Demand(String userId, Long basketNo, Dinner dinner, Style style){
+    public Demand(String userId, Long price, String status){
         this.userId = userId;
-        this.basketNo = basketNo;
-        this.dinner = dinner;
-        this.style = style;
+        this.price = price;
+        this.status = status;
     }
 }

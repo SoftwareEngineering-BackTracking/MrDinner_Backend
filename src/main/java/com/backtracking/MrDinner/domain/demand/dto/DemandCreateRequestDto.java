@@ -8,15 +8,5 @@ import lombok.Data;
 @Data
 public class DemandCreateRequestDto {
 
-    private Dinner dinner;
-    private Style style;
 
-    public Demand toEntity(String userId){
-        return Demand.builder()
-                .userId(userId)
-                .basketNo((long) -1)
-                .dinner(dinner)
-                .style(style)
-                .build();
-    }
 }

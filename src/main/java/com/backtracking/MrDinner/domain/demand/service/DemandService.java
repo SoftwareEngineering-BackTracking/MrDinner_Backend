@@ -1,6 +1,9 @@
 package com.backtracking.MrDinner.domain.demand.service;
 
 import com.backtracking.MrDinner.domain.demand.dto.DemandCreateRequestDto;
+import com.backtracking.MrDinner.domain.demand.dto.DemandDeleteRequestDto;
+import com.backtracking.MrDinner.domain.demand.dto.DemandFetchRequestDto;
+import com.backtracking.MrDinner.domain.demand.dto.DemandUpdateRequestDto;
 import com.backtracking.MrDinner.domain.demand.repository.DemandRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,9 +18,17 @@ public class DemandService {
 
     @Transactional
     public void createDemand(DemandCreateRequestDto requestDto, HttpSession session) {
-        String userId = (String) session.getAttribute("id");
-        System.out.println(userId);
-        demandRepository.save(requestDto.toEntity(userId));
     }
 
+    @Transactional
+    public void fetchDemand(DemandFetchRequestDto requestDto, HttpSession session) {
+    }
+
+    @Transactional
+    public void updateDemand(DemandUpdateRequestDto requestDto, HttpSession session) {
+    }
+
+    @Transactional
+    public void deleteDemand(DemandDeleteRequestDto requestDto) {
+    }
 }
