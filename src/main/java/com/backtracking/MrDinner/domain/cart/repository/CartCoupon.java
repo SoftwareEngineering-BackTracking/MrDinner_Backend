@@ -1,4 +1,4 @@
-package com.backtracking.MrDinner.domain.coupon.repository;
+package com.backtracking.MrDinner.domain.cart.repository;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

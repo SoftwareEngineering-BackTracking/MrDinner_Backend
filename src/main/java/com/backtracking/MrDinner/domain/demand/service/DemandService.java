@@ -27,6 +27,8 @@ public class DemandService {
     private final CartItemRepository cartItemRepository;
     private final CartDetailRepository cartDetailRepository;
     private final CartAddressRepository cartAddressRepository;
+    private final CartCouponRepository cartCouponRepository;
+    private final CartPurchaseRepository cartPurchaseRepository;
 
     public void createDemand(DemandCreateRequestDto requestDto, HttpSession session) {
         String id = (String) session.getAttribute("id");
@@ -74,8 +76,12 @@ public class DemandService {
         cartAddressRepository.deleteByCartNo(cart.getCartNo());
 
         // coupon
-
+        demand.setCoupon(cartCouponRepository.findByCartNo(cart.getCartNo()));
+        cartCouponRepository.deleteByCartNo(cart.getCartNo());
         // purchase
+        demand.setPurchase(cartPurchaseRepository.findByCartNo(cart.getCartNo()));
+        cartPurchaseRepository.deleteByCartNo(cart.getCartNo());
+
 
     }
 

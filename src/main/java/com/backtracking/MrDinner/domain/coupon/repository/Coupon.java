@@ -1,9 +1,7 @@
 package com.backtracking.MrDinner.domain.coupon.repository;
 
-import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.backtracking.MrDinner.global.enumpackage.Department;
+import lombok.*;
 import org.springframework.stereotype.Controller;
 
 import javax.persistence.*;
@@ -33,4 +31,13 @@ public class Coupon {
 
     @Column
     private String name;
+
+    @Builder
+    public Coupon(String userId, Date startTime, Date endTime, Long price, String name){
+        this.userId = userId;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.price = price;
+        this.name = name;
+    }
 }
