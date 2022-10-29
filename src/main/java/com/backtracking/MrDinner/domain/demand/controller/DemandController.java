@@ -48,12 +48,12 @@ public class DemandController {
     }
 
     @PutMapping
-    public ResponseEntity<DemandUpdateResponseDto> fetchDemand(@RequestBody DemandUpdateRequestDto requestDto, HttpSession session){
+    public ResponseEntity<DemandUpdateResponseDto> updateDemand(@RequestBody DemandUpdateRequestDto requestDto, HttpSession session){
         DtoMetaData dtoMetaData;
 
         try{
             demandService.updateDemand(requestDto, session);
-            dtoMetaData = new DtoMetaData("주문 조회 완료");
+            dtoMetaData = new DtoMetaData("주문 수정 완료");
             return ResponseEntity.ok(new DemandUpdateResponseDto(dtoMetaData));
         }
         catch (Exception e){

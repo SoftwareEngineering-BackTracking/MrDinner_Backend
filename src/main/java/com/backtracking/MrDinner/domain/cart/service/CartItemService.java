@@ -53,8 +53,5 @@ public class CartItemService {
         cartItemRepository.delete(cartItem);
     }
 
-    @Transactional
-    public void deleteAllCartItem() {
-        cartItemRepository.deleteAll();
-    }
+
 }

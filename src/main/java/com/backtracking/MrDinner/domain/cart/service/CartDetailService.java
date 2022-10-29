@@ -67,8 +67,4 @@ public class CartDetailService {
         cartDetailRepository.deleteAll(cartDetails);
     }
 
-    @Transactional
-    public void deleteAllCartDetail() {
-        cartDetailRepository.deleteAll();
-    }
 }
