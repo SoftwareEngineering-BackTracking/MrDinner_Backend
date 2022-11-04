@@ -17,6 +17,9 @@ public class CartPurchase {
     private Long cartPurchaseNo;
 
     @Column
+    private Long cartNo;
+
+    @Column
     private String cardNumber;
 
     @Column

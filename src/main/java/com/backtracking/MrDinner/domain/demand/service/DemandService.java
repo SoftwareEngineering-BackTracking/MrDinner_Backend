@@ -30,58 +30,89 @@ public class DemandService {
     private final CartCouponRepository cartCouponRepository;
     private final CartPurchaseRepository cartPurchaseRepository;
 
+    public Demand toEntity(String userId, Long price, DemandStatus status, Long address, Long coupon, Long purchase){
+        return Demand.builder()
+                .userId(userId)
+                .price(null)
+                .status(status)
+                .address(address)
+                .coupon(coupon)
+                .purchase(purchase)
+                .build();
+    }
+
     public void createDemand(DemandCreateRequestDto requestDto, HttpSession session) {
         String id = (String) session.getAttribute("id");
         Cart cart = cartRepository.findByUserId(id);
+
+        // demand price, status, address, coupon, purchase 저장
+
+        // price
+        Long price = Long.valueOf(0);
+
+        // status
+        DemandStatus status = DemandStatus.주문_대기;
+
+        // address
+        CartAddress cartAddress = cartAddressRepository.findByCartNo(cart.getCartNo());
+        Long address = cartAddress.getCartAddressNo();
+        //cartAddressRepository.deleteByCartNo(cart.getCartNo());
+
+        // coupon
+        CartCoupon cartCoupon = cartCouponRepository.findByCartNo(cart.getCartNo());
+        Long coupon = null;
+        if(cartCoupon != null){
+            coupon = cartCoupon.getCartCouponNo();
+        }
+        //cartCouponRepository.deleteByCartNo(cart.getCartNo());
+
+        // purchase
+        CartPurchase cartPurchase = cartPurchaseRepository.findByCartNo(cart.getCartNo());
+        Long purchase=  cartPurchase.getCartPurchaseNo();
+        //cartPurchaseRepository.deleteByCartNo(cart.getCartNo());
+
+        Demand demand = demandRepository.saveAndFlush(toEntity(id, price, status, address, coupon, purchase));
+
         // item 저장
         List<CartItem> cartItemList = cartItemRepository.findAllByCartNo(cart.getCartNo());
         if(cartItemList.isEmpty()){
             throw new IllegalArgumentException("장바구니에 담긴 주문이 없습니다.");
         }
         List<DemandItem> demandItemList = new ArrayList<>();
+        Long demandNo = demand.getDemandno();
+
         for(int i = 0 ; i < cartItemList.size() ; i++){
-            DemandItem demandItem = (DemandItem) cartItemList;
+            DemandItem demandItem = new DemandItem();
+            demandItem.setDemandNo(demandNo);
+            demandItem.setDinner(cartItemList.get(i).getDinner());
+            demandItem.setStyle(cartItemList.get(i).getStyle());
             demandItemList.add(demandItem);
         }
-        demandItemRepository.saveAll(demandItemList);
-        cartItemRepository.deleteAllByCartNo(cart.getCartNo());
+        List<DemandItem> savedDemandItemList = demandItemRepository.saveAllAndFlush(demandItemList);
 
         // detail 저장
         List<CartDetail> cartDetailList = new ArrayList<>();
-
+        List<Long> demandItemNoList = new ArrayList<>();
         for(int i = 0 ; i < cartItemList.size() ; i++){
             Long cartItemNo = cartItemList.get(i).getCartItemNo();
             cartDetailList.add(cartDetailRepository.findAllByCartItemNo(cartItemNo));
+            demandItemNoList.add(savedDemandItemList.get(i).getDemandItemNo());
         }
 
         List<DemandDetail> demandDetailList = new ArrayList<>();
+
         for(int i = 0 ; i < cartDetailList.size() ; i++){
             DemandDetail demandDetail = (DemandDetail) cartDetailList;
             demandDetailList.add(demandDetail);
         }
         demandDetailRepository.saveAll(demandDetailList);
+
+        // 장바구니 안 정보 삭제제
+       cartItemRepository.deleteAllByCartNo(cart.getCartNo());
         for(int i = 0 ; i < cartItemList.size() ; i++){
             Long cartItemNo = cartItemList.get(i).getCartItemNo();
             cartDetailRepository.deleteAllByCartItemNo(cartItemNo);
         }
-        // demand price, status, address, coupon, purchase 저장
-        Demand demand = new Demand();
-        // price
-
-        // status
-        demand.setStatus(DemandStatus.주문_대기);
-
-        // address
-        demand.setAddress(cartAddressRepository.findByCartNo(cart.getCartNo()));
-        cartAddressRepository.deleteByCartNo(cart.getCartNo());
-
-        // coupon
-        demand.setCoupon(cartCouponRepository.findByCartNo(cart.getCartNo()));
-        cartCouponRepository.deleteByCartNo(cart.getCartNo());
-        // purchase
-        demand.setPurchase(cartPurchaseRepository.findByCartNo(cart.getCartNo()));
-        cartPurchaseRepository.deleteByCartNo(cart.getCartNo());
-
 
     }
 

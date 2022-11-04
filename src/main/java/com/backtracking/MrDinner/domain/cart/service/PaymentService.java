@@ -1,10 +1,7 @@
 package com.backtracking.MrDinner.domain.cart.service;
 
 import com.backtracking.MrDinner.domain.cart.dto.PaymentRequestDto;
-import com.backtracking.MrDinner.domain.cart.repository.CartCoupon;
-import com.backtracking.MrDinner.domain.cart.repository.CartCouponRepository;
-import com.backtracking.MrDinner.domain.cart.repository.CartPurchase;
-import com.backtracking.MrDinner.domain.cart.repository.CartPurchaseRepository;
+import com.backtracking.MrDinner.domain.cart.repository.*;
 import com.backtracking.MrDinner.domain.coupon.repository.Coupon;
 import com.backtracking.MrDinner.domain.coupon.repository.CouponRepository;
 import com.backtracking.MrDinner.domain.purchase.repository.Purchase;
@@ -22,9 +19,12 @@ public class PaymentService {
     private final CartCouponRepository cartCouponRepository;
     private final PurchaseRepository purchaseRepository;
     private final CartPurchaseRepository cartPurchaseRepository;
+    private final CartRepository cartRepository;
 
     public void payCart(PaymentRequestDto requestDto, HttpSession session) {
         String id = (String) session.getAttribute("id");
+        Cart cart = cartRepository.findByUserId(id);
+
         Coupon coupon = couponRepository.findByCouponNoAndUserId(requestDto.getCouponNo(), id);
 
         if(coupon == null){
@@ -40,11 +40,13 @@ public class PaymentService {
         cartCoupon.setPrice(coupon.getPrice());
         cartCoupon.setStartTime(coupon.getStartTime());
         cartCoupon.setEndTime(coupon.getEndTime());
+        cartCoupon.setCartNo(cart.getCartNo());
         cartCouponRepository.save(cartCoupon);
 
         CartPurchase cartPurchase = new CartPurchase();
         cartPurchase.setCardNumber(purchase.getCardNumber());
         cartPurchase.setBank(purchase.getBank());
+        cartPurchase.setCartNo(cart.getCartNo());
         cartPurchaseRepository.save(cartPurchase);
     }
 }

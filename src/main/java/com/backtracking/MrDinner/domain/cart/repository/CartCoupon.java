@@ -15,7 +15,10 @@ public class CartCoupon {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long couponNo;
+    private Long cartCouponNo;
+
+    @Column
+    private Long cartNo;
 
     @Column
     private Date startTime;

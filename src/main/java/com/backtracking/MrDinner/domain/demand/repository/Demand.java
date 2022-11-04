@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Generated;
+import org.hibernate.annotations.GenerationTime;
 
 import javax.persistence.*;
 
@@ -18,6 +20,7 @@ public class Demand {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Generated(GenerationTime.INSERT)
     private Long demandno;
 
     @Column
@@ -37,4 +40,14 @@ public class Demand {
 
     @Column
     private Long purchase;
+
+    @Builder
+    public Demand(String userId, Long price, DemandStatus status, Long address, Long coupon, Long purchase){
+        this.userId = userId;
+        this.price = price;
+        this.status = status;
+        this.address = address;
+        this.coupon = coupon;
+        this.purchase = purchase;
+    }
 }
