@@ -8,6 +8,12 @@ import com.backtracking.MrDinner.domain.cart.repository.Cart;
 import com.backtracking.MrDinner.domain.cart.repository.CartItem;
 import com.backtracking.MrDinner.domain.cart.repository.CartItemRepository;
 import com.backtracking.MrDinner.domain.cart.repository.CartRepository;
+import com.backtracking.MrDinner.domain.dinner.repository.DinnerList;
+import com.backtracking.MrDinner.domain.dinner.repository.DinnerRepository;
+import com.backtracking.MrDinner.domain.style.repository.StyleList;
+import com.backtracking.MrDinner.domain.style.repository.StyleRepository;
+import com.backtracking.MrDinner.global.enumpackage.Dinner;
+import com.backtracking.MrDinner.global.enumpackage.Style;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -21,13 +27,16 @@ public class CartItemService {
 
     private final CartRepository cartRepository;
     private final CartItemRepository cartItemRepository;
-
+    private final DinnerRepository dinnerRepository;
+    private final StyleRepository styleRepository;
     @Transactional
     public void createCartItem(CartItemCreateRequestDto requestDto, HttpSession session) {
         String id = (String) session.getAttribute("id");
         Cart cart = cartRepository.findByUserId(id);
-
-        cartItemRepository.save(requestDto.toEntity(cart.getCartNo()));
+        DinnerList dinner = dinnerRepository.findById(requestDto.getDinner()).orElseThrow(() -> new IllegalArgumentException("해당 디너가 없습니다."));
+        StyleList style = styleRepository.findById(requestDto.getStyle()).orElseThrow(() -> new IllegalArgumentException("해당 스타일이 없습니다."));
+        Long price = dinner.getPrice() + style.getPrice();
+        cartItemRepository.save(requestDto.toEntity(cart.getCartNo(), price));
     }
 
     @Transactional

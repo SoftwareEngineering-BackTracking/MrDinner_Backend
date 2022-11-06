@@ -26,11 +26,15 @@ public class CartItem {
     @Enumerated(EnumType.STRING)
     private Style style;
 
+    @Column
+    private Long price;
+
     @Builder
-    public CartItem(Long cartNo, Dinner dinner, Style style) {
+    public CartItem(Long cartNo, Dinner dinner, Style style, Long price) {
         this.cartNo = cartNo;
         this.dinner = dinner;
         this.style = style;
+        this.price = price;
     }
 
     public void update(Dinner dinner, Style style){

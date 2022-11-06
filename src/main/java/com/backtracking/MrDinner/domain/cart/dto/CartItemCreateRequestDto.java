@@ -4,6 +4,7 @@ import com.backtracking.MrDinner.domain.cart.repository.Cart;
 import com.backtracking.MrDinner.domain.cart.repository.CartItem;
 import com.backtracking.MrDinner.domain.user.repository.User;
 import com.backtracking.MrDinner.global.enumpackage.Dinner;
+import com.backtracking.MrDinner.global.enumpackage.DinnerStyle;
 import com.backtracking.MrDinner.global.enumpackage.Style;
 import lombok.Data;
 
@@ -12,11 +13,12 @@ public class CartItemCreateRequestDto {
     private Dinner dinner;
     private Style style;
 
-    public CartItem toEntity(Long cartNo){
+    public CartItem toEntity(Long cartNo, Long price){
         return CartItem.builder()
                 .cartNo(cartNo)
                 .dinner(dinner)
                 .style(style)
+                .price(price)
                 .build();
     }
 }

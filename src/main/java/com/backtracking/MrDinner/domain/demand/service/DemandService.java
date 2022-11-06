@@ -85,7 +85,7 @@ public class DemandService {
             demandItem.setDemandNo(demandNo);
             demandItem.setDinner(cartItemList.get(i).getDinner());
             demandItem.setStyle(cartItemList.get(i).getStyle());
-
+            
             DemandItem savedDemandItem = demandItemRepository.saveAndFlush(demandItem);
 
             Long cartItemNo = cartItemList.get(i).getCartItemNo();

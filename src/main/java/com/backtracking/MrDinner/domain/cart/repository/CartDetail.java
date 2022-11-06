@@ -2,6 +2,7 @@ package com.backtracking.MrDinner.domain.cart.repository;
 
 import com.backtracking.MrDinner.global.enumpackage.DetailStatus;
 import com.backtracking.MrDinner.global.enumpackage.Dinner;
+import com.backtracking.MrDinner.global.enumpackage.DinnerStyle;
 import com.backtracking.MrDinner.global.enumpackage.Style;
 import lombok.Builder;
 import lombok.Getter;
@@ -31,11 +32,19 @@ public class CartDetail {
     @Enumerated(EnumType.STRING)
     private DetailStatus status;
 
+    @Column
+    private Long price;
+
+    @Column
+    private DinnerStyle dinnerStyle;
+
     @Builder
-    public CartDetail(Long cartItemNo, String name, DetailStatus status) {
+    public CartDetail(Long cartItemNo, String name, DetailStatus status, Long price, DinnerStyle dinnerStyle) {
         this.cartItemNo = cartItemNo;
         this.name = name;
         this.status = status;
+        this.price = price;
+        this.dinnerStyle = dinnerStyle;
     }
 
     public void update(String name, DetailStatus status){
