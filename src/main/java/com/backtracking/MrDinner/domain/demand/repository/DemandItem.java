@@ -19,6 +19,7 @@ public class DemandItem {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Generated(GenerationTime.INSERT)
     private Long demandItemNo;
 
     @Column
@@ -29,4 +30,9 @@ public class DemandItem {
 
     @Column
     private Style style;
+
+    public void update(Dinner dinner, Style style) {
+        this.dinner = dinner;
+        this.style = style;
+    }
 }

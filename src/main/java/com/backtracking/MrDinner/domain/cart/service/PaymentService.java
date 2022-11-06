@@ -25,23 +25,24 @@ public class PaymentService {
         String id = (String) session.getAttribute("id");
         Cart cart = cartRepository.findByUserId(id);
 
-        Coupon coupon = couponRepository.findByCouponNoAndUserId(requestDto.getCouponNo(), id);
-
-        if(coupon == null){
-            throw new IllegalArgumentException("해당 쿠폰이 없습니다.");
+        if(requestDto.getCouponNo() != null) {
+            Coupon coupon = couponRepository.findByCouponNoAndUserId(requestDto.getCouponNo(), id);
+            if(coupon == null){
+                throw new IllegalArgumentException("해당 쿠폰이 없습니다.");
+            }
+            CartCoupon cartCoupon = new CartCoupon();
+            cartCoupon.setName(coupon.getName());
+            cartCoupon.setPrice(coupon.getPrice());
+            cartCoupon.setStartTime(coupon.getStartTime());
+            cartCoupon.setEndTime(coupon.getEndTime());
+            cartCoupon.setCartNo(cart.getCartNo());
+            cartCouponRepository.save(cartCoupon);
         }
+
         Purchase purchase = purchaseRepository.findById(requestDto.getPurchaseNo()).orElseThrow(() -> new IllegalArgumentException("해당 결제 정보가 없습니다."));
         if(purchase == null){
             throw new IllegalArgumentException("해당 결제 정보가 없습니다.");
         }
-
-        CartCoupon cartCoupon = new CartCoupon();
-        cartCoupon.setName(coupon.getName());
-        cartCoupon.setPrice(coupon.getPrice());
-        cartCoupon.setStartTime(coupon.getStartTime());
-        cartCoupon.setEndTime(coupon.getEndTime());
-        cartCoupon.setCartNo(cart.getCartNo());
-        cartCouponRepository.save(cartCoupon);
 
         CartPurchase cartPurchase = new CartPurchase();
         cartPurchase.setCardNumber(purchase.getCardNumber());

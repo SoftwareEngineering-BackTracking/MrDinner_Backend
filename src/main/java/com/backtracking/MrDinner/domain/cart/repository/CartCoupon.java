@@ -17,7 +17,7 @@ public class CartCoupon {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long cartCouponNo;
 
-    @Column
+    @Column(unique = true)
     private Long cartNo;
 
     @Column

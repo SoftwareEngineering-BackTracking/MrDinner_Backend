@@ -1,6 +1,8 @@
 package com.backtracking.MrDinner.domain.demand.controller;
 
 import com.backtracking.MrDinner.domain.demand.dto.*;
+import com.backtracking.MrDinner.domain.demand.repository.Demand;
+import com.backtracking.MrDinner.domain.demand.repository.OrderInfo;
 import com.backtracking.MrDinner.domain.demand.service.DemandService;
 import com.backtracking.MrDinner.global.dto.DtoMetaData;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
@@ -37,9 +40,16 @@ public class DemandController {
         DtoMetaData dtoMetaData;
 
         try{
-            demandService.fetchDemand(requestDto, session);
-            dtoMetaData = new DtoMetaData("주문 조회 완료");
-            return ResponseEntity.ok(new DemandFetchResponseDto(dtoMetaData));
+            if(requestDto.getFilter() == null){
+                List<Demand> demandList = demandService.fetchAllDemand(requestDto);
+                dtoMetaData = new DtoMetaData("전체 주문 조회 완료");
+                return ResponseEntity.ok(new DemandFetchResponseDto(dtoMetaData, demandList));
+            }
+            else {
+                OrderInfo orderInfo = demandService.fetchDemand(requestDto, session);
+                dtoMetaData = new DtoMetaData("주문 조회 완료");
+                return ResponseEntity.ok(new DemandFetchResponseDto(dtoMetaData, orderInfo.getDemandList(), orderInfo.getDemandItemList(), orderInfo.getDemandDetailList()));
+            }
         }
         catch (Exception e){
             dtoMetaData= new DtoMetaData(e.getMessage(), e.getClass().getName());
@@ -63,18 +73,18 @@ public class DemandController {
     }
 
     @DeleteMapping
-    public ResponseEntity<DemandDeleteResponseDto> deleteDemand(@RequestBody DemandDeleteRequestDto requestDto){
+    public ResponseEntity<DemandCancelResponseDto> cancelDemand(@RequestBody DemandCancelRequestDto requestDto){
 
         DtoMetaData dtoMetaData;
 
         try{
-            demandService.deleteDemand(requestDto);
+            demandService.cancelDemand(requestDto);
             dtoMetaData = new DtoMetaData("주문 삭제 완료");
-            return ResponseEntity.ok(new DemandDeleteResponseDto(dtoMetaData));
+            return ResponseEntity.ok(new DemandCancelResponseDto(dtoMetaData));
         }
         catch (Exception e){
             dtoMetaData = new DtoMetaData(e.getMessage(), e.getClass().getName());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new DemandDeleteResponseDto(dtoMetaData));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new DemandCancelResponseDto(dtoMetaData));
         }
     }
 }

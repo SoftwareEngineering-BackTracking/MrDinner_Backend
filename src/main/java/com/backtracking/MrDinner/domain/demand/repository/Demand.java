@@ -50,4 +50,12 @@ public class Demand {
         this.coupon = coupon;
         this.purchase = purchase;
     }
+
+    public void update(Long price, DemandStatus status, Long address, Long coupon, Long purchase){
+        this.price = price;
+        this.status = status;
+        this.address = address;
+        this.coupon = coupon;
+        this.purchase = purchase;
+    }
 }

@@ -1,13 +1,17 @@
 package com.backtracking.MrDinner.domain.demand.repository;
 
 import com.backtracking.MrDinner.global.enumpackage.DetailStatus;
+import com.backtracking.MrDinner.global.enumpackage.Dinner;
+import com.backtracking.MrDinner.global.enumpackage.Style;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor
 public class DemandDetail {
 
@@ -23,4 +27,10 @@ public class DemandDetail {
 
     @Column
     private DetailStatus status;
+
+
+    public void update(String name, DetailStatus status) {
+        this.name = name;
+        this.status = status;
+    }
 }

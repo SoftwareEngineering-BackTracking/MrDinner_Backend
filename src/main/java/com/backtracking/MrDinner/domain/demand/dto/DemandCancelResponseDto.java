@@ -6,6 +6,6 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class DemandDeleteResponseDto {
+public class DemandCancelResponseDto {
     private DtoMetaData dtoMetaData;
 }

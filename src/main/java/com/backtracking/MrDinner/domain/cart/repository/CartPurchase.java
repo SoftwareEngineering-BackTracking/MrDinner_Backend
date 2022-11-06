@@ -16,7 +16,7 @@ public class CartPurchase {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long cartPurchaseNo;
 
-    @Column
+    @Column(unique = true)
     private Long cartNo;
 
     @Column
