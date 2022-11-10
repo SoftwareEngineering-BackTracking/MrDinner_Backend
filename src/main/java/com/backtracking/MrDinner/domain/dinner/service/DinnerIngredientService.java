@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -38,11 +39,23 @@ public class DinnerIngredientService {
         }
     }
 
+    @Transactional
+    public List<DinnerIngredientList> fetchDinnerIngredient(DinnerIngredientFetchRequestDto requestDto) {
+        DinnerIngredientList dinnerIngredientList = dinnerIngredientRepository.findById(requestDto.getDinnerIngredient()).orElseThrow(() -> new IllegalArgumentException("디너 재료가 없습니다."));
+        List<DinnerIngredientList> dinnerIngredientLists = new ArrayList<>();
+
+        dinnerIngredientLists.add(dinnerIngredientList);
+
+        return dinnerIngredientLists;
+    }
+
+    @Transactional
     public void updateDinnerIngredient(DinnerIngredientUpdateRequestDto requestDto) {
         DinnerIngredientList dinnerIngredientList = dinnerIngredientRepository.findById(requestDto.getDinnerIngredient()).orElseThrow(() -> new IllegalArgumentException("해당 디너 재고가 없습니다."));
         dinnerIngredientList.update(requestDto.getQuantity(), requestDto.getDemandDate());
     }
 
+    @Transactional
     public void deleteDinnerIngredient(DinnerIngredientDeleteRequestDto requestDto) {
         DinnerIngredientList dinnerIngredient = dinnerIngredientRepository.findById(requestDto.getDinnerIngredient()).orElseThrow(() -> new IllegalArgumentException("해당 디너 재고가 없습니다."));
         dinnerIngredientRepository.delete(dinnerIngredient);

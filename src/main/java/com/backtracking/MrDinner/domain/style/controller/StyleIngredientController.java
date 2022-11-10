@@ -39,10 +39,16 @@ public class StyleIngredientController {
         DtoMetaData dtoMetaData;
 
         try{
-
-            List<StyleIngredientList> StyleIngredientList = styleIngredientService.fetchAllStyleIngredient(requestDto);
-            dtoMetaData = new DtoMetaData("전체 스타일 조회 완료");
-            return ResponseEntity.ok(new StyleIngredientFetchResponseDto(dtoMetaData, StyleIngredientList));
+            if(requestDto.getStyleIngredient() == null){
+                List<StyleIngredientList> StyleIngredientList = styleIngredientService.fetchAllStyleIngredient(requestDto);
+                dtoMetaData = new DtoMetaData("스타일 조회 완료");
+                return ResponseEntity.ok(new StyleIngredientFetchResponseDto(dtoMetaData, StyleIngredientList));
+            }
+            else{
+                List<StyleIngredientList> StyleIngredientList = styleIngredientService.fetchStyleIngredient(requestDto);
+                dtoMetaData = new DtoMetaData("전체 스타일 조회 완료");
+                return ResponseEntity.ok(new StyleIngredientFetchResponseDto(dtoMetaData, StyleIngredientList));
+            }
 
         }
         catch (Exception e){

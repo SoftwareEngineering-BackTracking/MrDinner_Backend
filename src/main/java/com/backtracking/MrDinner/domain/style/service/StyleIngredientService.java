@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -49,5 +50,16 @@ public class StyleIngredientService {
     public void deleteStyleIngredient(StyleIngredientDeleteRequestDto requestDto) {
         StyleIngredientList styleIngredient = styleIngredientRepository.findById(requestDto.getStyleIngredient()).orElseThrow(() -> new IllegalArgumentException("해당 디너 재고가 없습니다."));
         styleIngredientRepository.delete(styleIngredient);
+    }
+
+    @Transactional
+    public List<StyleIngredientList> fetchStyleIngredient(StyleIngredientFetchRequestDto requestDto) {
+        StyleIngredientList styleIngredientList = styleIngredientRepository.findById(requestDto.getStyleIngredient()).orElseThrow(() -> new IllegalArgumentException("디너 재료가 없습니다."));
+        List<StyleIngredientList> styleIngredientLists = new ArrayList<>();
+
+        styleIngredientLists.add(styleIngredientList);
+        return styleIngredientLists;
+
+
     }
 }

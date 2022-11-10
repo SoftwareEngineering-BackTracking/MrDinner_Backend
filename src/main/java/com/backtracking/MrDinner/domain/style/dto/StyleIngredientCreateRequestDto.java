@@ -1,6 +1,5 @@
 package com.backtracking.MrDinner.domain.style.dto;
 
-import com.backtracking.MrDinner.domain.stock.repository.StyleStock;
 import com.backtracking.MrDinner.domain.style.repository.StyleIngredientList;
 import com.backtracking.MrDinner.global.enumpackage.Style;
 import com.backtracking.MrDinner.global.enumpackage.StyleIngredient;

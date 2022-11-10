@@ -1,5 +1,6 @@
 package com.backtracking.MrDinner.domain.cart.repository;
 
+import com.backtracking.MrDinner.global.entitiy.BaseEntity;
 import com.backtracking.MrDinner.global.enumpackage.Dinner;
 import com.backtracking.MrDinner.global.enumpackage.Style;
 import lombok.Builder;
@@ -11,7 +12,7 @@ import javax.persistence.*;
 @Entity
 @Getter
 @NoArgsConstructor
-public class CartItem {
+public class CartItem extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

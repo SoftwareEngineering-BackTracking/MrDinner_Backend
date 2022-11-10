@@ -41,7 +41,7 @@ public class PurchaseService {
         String id = (String) session.getAttribute("id");
         Purchase purchase = purchaseRepository.findAllByPurchaseNoAndUserId(requestDto.getPurchaseNo(), id);
         if (purchase == null) {
-            throw new IllegalArgumentException("해당 주소가 없습니다.");
+            throw new IllegalArgumentException("해당 결제 정보가 없습니다.");
         }
         purchaseRepository.delete(purchase);
     }

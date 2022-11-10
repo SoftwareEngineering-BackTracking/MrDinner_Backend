@@ -8,15 +8,13 @@ import com.backtracking.MrDinner.domain.demand.dto.DemandCreateRequestDto;
 import com.backtracking.MrDinner.domain.demand.dto.DemandFetchRequestDto;
 import com.backtracking.MrDinner.domain.demand.dto.DemandUpdateRequestDto;
 import com.backtracking.MrDinner.domain.demand.repository.*;
-import com.backtracking.MrDinner.domain.dinner.repository.DinnerRepository;
-import com.backtracking.MrDinner.domain.stock.repository.DinnerStockRepository;
-import com.backtracking.MrDinner.domain.stock.repository.StyleStockRepository;
-import com.backtracking.MrDinner.domain.style.repository.StyleRepository;
-import com.backtracking.MrDinner.global.enumpackage.DemandStatus;
+import com.backtracking.MrDinner.domain.dinner.repository.DinnerIngredientList;
+import com.backtracking.MrDinner.domain.dinner.repository.DinnerIngredientRepository;
+import com.backtracking.MrDinner.domain.style.repository.StyleIngredientList;
+import com.backtracking.MrDinner.domain.style.repository.StyleIngredientRepository;
+import com.backtracking.MrDinner.global.enumpackage.*;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ServerErrorException;
-
 import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
@@ -34,8 +32,8 @@ public class DemandService {
     private final CartAddressRepository cartAddressRepository;
     private final CartCouponRepository cartCouponRepository;
     private final CartPurchaseRepository cartPurchaseRepository;
-    private final DinnerStockRepository dinnerStockRepository;
-    private final StyleStockRepository styleStockRepository;
+    private final DinnerIngredientRepository dinnerIngredientRepository;
+    private final StyleIngredientRepository styleIngredientRepository;
     public Demand toEntity(String userId, Long price, DemandStatus status, Long address, Long coupon, Long purchase){
         return Demand.builder()
                 .userId(userId)
@@ -94,6 +92,28 @@ public class DemandService {
             demandItem.setPrice(cartItemList.get(i).getPrice());
             price += demandItem.getPrice();
 
+            List<DinnerIngredientList> dinnerIngredientLists = dinnerIngredientRepository.findAllByDinner(cartItemList.get(i).getDinner());
+            for(int j = 0 ; j < dinnerIngredientLists.size() ; j++){
+                Long quantity = dinnerIngredientLists.get(j).getQuantity();
+                if(quantity <= 0){
+                    throw new IllegalArgumentException("요리하기에 충분한 재고가 없습니다. 부족한 재고: "+dinnerIngredientLists.get(j).getDinnerIngredient());
+                }
+                quantity = quantity - 1;
+                System.out.println(dinnerIngredientLists.get(j).getDinnerIngredient());
+                dinnerIngredientLists.get(j).update(quantity, dinnerIngredientLists.get(i).getDemandDate());
+            }
+
+            List<StyleIngredientList> styleIngredientLists = styleIngredientRepository.findAllByStyle(cartItemList.get(i).getStyle());
+            for(int j = 0 ; j < styleIngredientLists.size() ; j++){
+                Long quantity = styleIngredientLists.get(j).getQuantity();
+                if(quantity <= 0){
+                    throw new IllegalArgumentException("요리하기에 충분한 재고가 없습니다. 부족한 재고: "+styleIngredientLists.get(j).getStyleIngredient());
+                }
+                quantity = quantity - 1;
+                System.out.println(styleIngredientLists.get(j).getStyleIngredient());
+                styleIngredientLists.get(j).update(quantity, dinnerIngredientLists.get(i).getDemandDate());
+            }
+            System.out.println("item 재고 파악 완료");
             DemandItem savedDemandItem = demandItemRepository.saveAndFlush(demandItem);
 
             Long cartItemNo = cartItemList.get(i).getCartItemNo();
@@ -107,7 +127,40 @@ public class DemandService {
                 demandDetail.setName(cartDetailList.get(j).getName());
                 demandDetail.setStatus(cartDetailList.get(j).getStatus());
                 demandDetail.setPrice(cartDetailList.get(j).getPrice());
+                demandDetail.setDinnerStyle(cartDetailList.get(j).getDinnerStyle());
                 price += demandDetail.getPrice();
+
+                if(cartDetailList.get(j).getDinnerStyle() == DinnerStyle.디너){
+                    DinnerIngredientList dinnerIngredientList = dinnerIngredientRepository.findById(DinnerIngredient.valueOf(cartDetailList.get(j).getName())).orElseThrow(() ->new IllegalArgumentException("세부 요청사항에 대한 메뉴가 없습니다."));
+                    if(cartDetailList.get(j).getStatus() == DetailStatus.추가){
+                        Long quantity = dinnerIngredientList.getQuantity();
+                        if(quantity <= 0){
+                            throw new IllegalArgumentException("요리하기에 충분한 재고가 없습니다. 부족한 재고: "+dinnerIngredientList.getDinnerIngredient());
+                        }
+                        quantity = quantity - 1;
+                        dinnerIngredientList.update(quantity, dinnerIngredientList.getDemandDate());
+                    }
+                    else if(cartDetailList.get(j).getStatus() == DetailStatus.삭제){
+                        Long quantity = dinnerIngredientList.getQuantity() + 1;
+                        dinnerIngredientList.update(quantity, dinnerIngredientList.getDemandDate());
+                    }
+                }
+                else{
+                    StyleIngredientList styleIngredientList = styleIngredientRepository.findById(StyleIngredient.valueOf(cartDetailList.get(j).getName())).orElseThrow(() -> new IllegalArgumentException("세부 요청사항에 대한 메뉴가 없습니다."));
+                    if(cartDetailList.get(j).getStatus() == DetailStatus.추가){
+                        Long quantity = styleIngredientList.getQuantity();
+                        if(quantity <= 0){
+                            throw new IllegalArgumentException("요리하기에 충분한 재고가 없습니다. 부족한 재고: "+styleIngredientList.getStyleIngredient());
+                        }
+                        quantity = quantity - 1;
+                        styleIngredientList.update(quantity, styleIngredientList.getDemandDate());
+                    }
+                    else if(cartDetailList.get(j).getStatus() == DetailStatus.삭제){
+                        Long quantity = styleIngredientList.getQuantity() + 1;
+                        styleIngredientList.update(quantity, styleIngredientList.getDemandDate());
+                    }
+                }
+
                 demandDetailList.add(demandDetail);
             }
             demandDetailRepository.saveAllAndFlush(demandDetailList);
@@ -174,7 +227,7 @@ public class DemandService {
             for(int i = 0 ; i < updateDemandDetailList.size() ; i++){
                 Long demandDetailNo = updateDemandDetailList.get(i).getDemandDetailNo();
                 DemandDetail demandDetail = demandDetailRepository.findById(demandDetailNo).orElseThrow(() -> new IllegalArgumentException("주문 상세 정보가 없습니다."));
-                demandDetail.update(updateDemandDetailList.get(i).getName(), updateDemandDetailList.get(i).getStatus(), updateDemandDetailList.get(i).getPrice());
+                demandDetail.update(updateDemandDetailList.get(i).getName(), updateDemandDetailList.get(i).getStatus(), updateDemandDetailList.get(i).getPrice(), updateDemandDetailList.get(i).getDinnerStyle());
             }
         }
 

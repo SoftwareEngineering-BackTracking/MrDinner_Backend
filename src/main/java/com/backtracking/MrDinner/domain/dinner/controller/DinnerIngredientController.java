@@ -39,9 +39,16 @@ public class DinnerIngredientController {
         DtoMetaData dtoMetaData;
 
         try{
-            List<DinnerIngredientList> dinnerIngredientList = dinnerIngredientService.fetchDinnerAllIngredient(requestDto);
-            dtoMetaData = new DtoMetaData("디너 세부 재료 조회 완료");
-            return ResponseEntity.ok(new DinnerIngredientFetchResponseDto(dtoMetaData, dinnerIngredientList));
+            if(requestDto.getDinnerIngredient() == null){
+                List<DinnerIngredientList> dinnerIngredientList = dinnerIngredientService.fetchDinnerAllIngredient(requestDto);
+                dtoMetaData = new DtoMetaData("디너 세부 재료 조회 완료");
+                return ResponseEntity.ok(new DinnerIngredientFetchResponseDto(dtoMetaData, dinnerIngredientList));
+            }
+            else{
+                List<DinnerIngredientList> dinnerIngredientList = dinnerIngredientService.fetchDinnerIngredient(requestDto);
+                dtoMetaData = new DtoMetaData("전체 디너 재료 조회 완료");
+                return ResponseEntity.ok(new DinnerIngredientFetchResponseDto(dtoMetaData, dinnerIngredientList));
+            }
 
         }
         catch (Exception e){

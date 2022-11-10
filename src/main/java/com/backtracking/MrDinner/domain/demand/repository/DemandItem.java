@@ -1,5 +1,6 @@
 package com.backtracking.MrDinner.domain.demand.repository;
 
+import com.backtracking.MrDinner.global.entitiy.BaseEntity;
 import com.backtracking.MrDinner.global.enumpackage.Dinner;
 import com.backtracking.MrDinner.global.enumpackage.Style;
 import lombok.Getter;
@@ -15,7 +16,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Getter
 @Setter
-public class DemandItem {
+public class DemandItem extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -29,17 +29,28 @@ public class CartDetailService {
 
     public void createCartDetail(CartDetailCreateRequestDto requestDto) {
         List<String> name = requestDto.getName();
+        List<DetailStatus> detailStatuses = requestDto.getStatus();
         List<DinnerStyle> dinnerStyles = requestDto.getDinnerStyles();
         List<CartDetail> cartDetails = new ArrayList<>();
 
         for(int i = 0 ; i < name.size() ; i++){
             if(dinnerStyles.get(i) == DinnerStyle.디너){
                 DinnerIngredientList dinnerIngredientList = dinnerIngredientRepository.findById(DinnerIngredient.valueOf(name.get(i))).orElseThrow(() ->new IllegalArgumentException("세부 요청사항에 대한 메뉴가 없습니다."));
-                cartDetails.add(requestDto.toEntity(i, dinnerIngredientList.getPrice()));
+                if(detailStatuses.get(i) == DetailStatus.추가){
+                    cartDetails.add(requestDto.toEntity(i, dinnerIngredientList.getPrice()));
+                }
+                else if(detailStatuses.get(i) == DetailStatus.삭제){
+                    cartDetails.add(requestDto.toEntity(i, -dinnerIngredientList.getPrice()));
+                }
             }
             else{
                 StyleIngredientList styleIngredientList = styleIngredientRepository.findById(StyleIngredient.valueOf(name.get(i))).orElseThrow(() -> new IllegalArgumentException("세부 요청사항에 대한 메뉴가 없습니다."));
-                cartDetails.add(requestDto.toEntity(i, styleIngredientList.getPrice()));
+                if(detailStatuses.get(i) == DetailStatus.추가){
+                    cartDetails.add(requestDto.toEntity(i, styleIngredientList.getPrice()));
+                }
+                else if(detailStatuses.get(i) == DetailStatus.삭제){
+                    cartDetails.add(requestDto.toEntity(i, -styleIngredientList.getPrice()));
+                }
             }
         }
         cartDetailRepository.saveAll(cartDetails);
