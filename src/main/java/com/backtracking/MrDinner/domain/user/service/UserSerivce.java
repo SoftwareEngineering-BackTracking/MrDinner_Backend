@@ -1,5 +1,7 @@
 package com.backtracking.MrDinner.domain.user.service;
 
+import com.backtracking.MrDinner.domain.cart.repository.CartRepository;
+import com.backtracking.MrDinner.domain.cart.service.CartService;
 import com.backtracking.MrDinner.domain.user.dto.UserCreateRequestDto;
 import com.backtracking.MrDinner.domain.user.dto.UserDeleteRequestDto;
 import com.backtracking.MrDinner.domain.user.dto.UserFetchRequestDto;
@@ -15,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
+import java.util.Calendar;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -22,7 +25,7 @@ import java.util.List;
 public class UserSerivce {
     private Department department;
     private final UserRepository userRepository;
-
+    private final CartService cartService;
     // 회원가입
     @Transactional
     public void createUser(UserCreateRequestDto requestDto) {
@@ -31,6 +34,7 @@ public class UserSerivce {
             throw new IllegalArgumentException("이미 가입되어 있는 유저입니다. ID: " + id);
         }
         userRepository.save(requestDto.toEntity());
+        cartService.createCart(requestDto.getId());
     }
 
     // 내 정보 보기

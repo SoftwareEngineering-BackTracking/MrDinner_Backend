@@ -29,14 +29,16 @@ public class AuthService {
 
     @Transactional
     public void login(LoginRequestDto requestDto, HttpSession session) {
+        if(session.getAttribute("id") != null){
+            session.removeAttribute("id");
+        }
         User user = userRepository.findById(requestDto.getId()).orElseThrow(() -> new IllegalArgumentException("해당 아이디가 존재하지 않습니다."));
 
         if(!user.getPassword().equals(requestDto.getPassword())){
             throw new IllegalArgumentException("비밀번호가 틀립니다.");
         }
-        // 로그인 성공시 세션 저장
+        // 세션에 id 정보 저장
         session.setAttribute("id", requestDto.getId());
-        //System.out.println((String) session.getAttribute("id"));
     }
 
     @Transactional
@@ -51,6 +53,7 @@ public class AuthService {
     public void logout(LogoutRequestDto requestDto, HttpSession session) {
         String id = (String) session.getAttribute("id");
         if(id != null){
+            // 세션에 아이디 정보 삭제
             session.invalidate();
         }
     }
