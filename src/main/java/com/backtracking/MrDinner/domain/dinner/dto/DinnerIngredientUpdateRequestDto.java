@@ -6,5 +6,9 @@ import lombok.Data;
 import java.util.Date;
 
 @Data
-public class DinnerIngredientFetchRequestDto {
+public class DinnerIngredientUpdateRequestDto {
+
+    private DinnerIngredient dinnerIngredient;
+    private Long quantity;
+    private Date demandDate;
 }

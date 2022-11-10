@@ -28,9 +28,12 @@ public class DemandDetail {
     @Column
     private DetailStatus status;
 
+    @Column
+    private Long price;
 
-    public void update(String name, DetailStatus status) {
+    public void update(String name, DetailStatus status, Long price) {
         this.name = name;
         this.status = status;
+        this.price = price;
     }
 }

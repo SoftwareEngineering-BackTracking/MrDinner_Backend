@@ -1,7 +1,6 @@
 package com.backtracking.MrDinner.domain.dinner.dto;
 
 import com.backtracking.MrDinner.domain.dinner.repository.DinnerIngredientList;
-import com.backtracking.MrDinner.domain.dinner.repository.DinnerList;
 import com.backtracking.MrDinner.global.dto.DtoMetaData;
 import lombok.Data;
 

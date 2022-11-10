@@ -16,6 +16,7 @@ import com.backtracking.MrDinner.global.enumpackage.Dinner;
 import com.backtracking.MrDinner.global.enumpackage.Style;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ServerErrorException;
 
 import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
@@ -30,9 +31,12 @@ public class CartItemService {
     private final DinnerRepository dinnerRepository;
     private final StyleRepository styleRepository;
     @Transactional
-    public void createCartItem(CartItemCreateRequestDto requestDto, HttpSession session) {
+    public void createCartItem(CartItemCreateRequestDto requestDto, HttpSession session) throws IllegalAccessException {
         String id = (String) session.getAttribute("id");
         Cart cart = cartRepository.findByUserId(id);
+        if(cart == null){
+            throw new IllegalAccessException("장바구니 생성을 못하였습니다.");
+        }
         DinnerList dinner = dinnerRepository.findById(requestDto.getDinner()).orElseThrow(() -> new IllegalArgumentException("해당 디너가 없습니다."));
         StyleList style = styleRepository.findById(requestDto.getStyle()).orElseThrow(() -> new IllegalArgumentException("해당 스타일이 없습니다."));
         Long price = dinner.getPrice() + style.getPrice();

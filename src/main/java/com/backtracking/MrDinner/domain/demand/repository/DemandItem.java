@@ -31,8 +31,11 @@ public class DemandItem {
     @Column
     private Style style;
 
-    public void update(Dinner dinner, Style style) {
+    @Column
+    private Long price;
+    public void update(Dinner dinner, Style style, Long price) {
         this.dinner = dinner;
         this.style = style;
+        this.price = price;
     }
 }

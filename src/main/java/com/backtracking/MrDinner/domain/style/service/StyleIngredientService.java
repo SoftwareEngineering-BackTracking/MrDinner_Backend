@@ -1,9 +1,11 @@
 package com.backtracking.MrDinner.domain.style.service;
 
+import com.backtracking.MrDinner.domain.style.dto.StyleIngredientCreateRequestDto;
+import com.backtracking.MrDinner.domain.style.dto.StyleIngredientDeleteRequestDto;
 import com.backtracking.MrDinner.domain.style.dto.StyleIngredientFetchRequestDto;
+import com.backtracking.MrDinner.domain.style.dto.StyleIngredientUpdateRequestDto;
 import com.backtracking.MrDinner.domain.style.repository.StyleIngredientList;
 import com.backtracking.MrDinner.domain.style.repository.StyleIngredientRepository;
-import com.backtracking.MrDinner.domain.style.repository.StyleList;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +16,17 @@ import java.util.List;
 @RequiredArgsConstructor
 public class StyleIngredientService {
     private final StyleIngredientRepository styleIngredientRepository;
+
+    @Transactional
+    public void createStyleIngredient(StyleIngredientCreateRequestDto requestDto) {
+        if(styleIngredientRepository.existsById(requestDto.getStyleIngredient())) {
+            throw new IllegalArgumentException("이미 있는 재료입니다.");
+        }
+
+        styleIngredientRepository.save(requestDto.toEntity(requestDto.getStyleIngredient(), requestDto.getStyle(), requestDto.getPrice(), requestDto.getQuantity(), requestDto.getDemandDate()));
+
+    }
+
     @Transactional
     public List<StyleIngredientList> fetchAllStyleIngredient(StyleIngredientFetchRequestDto requestDto) {
         List<StyleIngredientList> styleIngredientList = styleIngredientRepository.findAll();
@@ -24,5 +37,17 @@ public class StyleIngredientService {
         else{
             return styleIngredientList;
         }
+    }
+
+    @Transactional
+    public void updateStyleIngredient(StyleIngredientUpdateRequestDto requestDto) {
+        StyleIngredientList styleIngredient = styleIngredientRepository.findById(requestDto.getStyleIngredient()).orElseThrow(() -> new IllegalArgumentException("해당 디너 재고가 없습니다."));
+        styleIngredient.update(requestDto.getQuantity(), requestDto.getDemandDate());
+    }
+
+    @Transactional
+    public void deleteStyleIngredient(StyleIngredientDeleteRequestDto requestDto) {
+        StyleIngredientList styleIngredient = styleIngredientRepository.findById(requestDto.getStyleIngredient()).orElseThrow(() -> new IllegalArgumentException("해당 디너 재고가 없습니다."));
+        styleIngredientRepository.delete(styleIngredient);
     }
 }

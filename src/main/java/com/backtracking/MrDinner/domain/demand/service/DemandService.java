@@ -8,9 +8,14 @@ import com.backtracking.MrDinner.domain.demand.dto.DemandCreateRequestDto;
 import com.backtracking.MrDinner.domain.demand.dto.DemandFetchRequestDto;
 import com.backtracking.MrDinner.domain.demand.dto.DemandUpdateRequestDto;
 import com.backtracking.MrDinner.domain.demand.repository.*;
+import com.backtracking.MrDinner.domain.dinner.repository.DinnerRepository;
+import com.backtracking.MrDinner.domain.stock.repository.DinnerStockRepository;
+import com.backtracking.MrDinner.domain.stock.repository.StyleStockRepository;
+import com.backtracking.MrDinner.domain.style.repository.StyleRepository;
 import com.backtracking.MrDinner.global.enumpackage.DemandStatus;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ServerErrorException;
 
 import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
@@ -29,7 +34,8 @@ public class DemandService {
     private final CartAddressRepository cartAddressRepository;
     private final CartCouponRepository cartCouponRepository;
     private final CartPurchaseRepository cartPurchaseRepository;
-
+    private final DinnerStockRepository dinnerStockRepository;
+    private final StyleStockRepository styleStockRepository;
     public Demand toEntity(String userId, Long price, DemandStatus status, Long address, Long coupon, Long purchase){
         return Demand.builder()
                 .userId(userId)
@@ -71,7 +77,7 @@ public class DemandService {
         Long purchase=  cartPurchase.getCartPurchaseNo();
         //cartPurchaseRepository.deleteByCartNo(cart.getCartNo());
 
-        Demand demand = demandRepository.saveAndFlush(toEntity(id, price, status, address, coupon, purchase));
+        Demand demand = demandRepository.saveAndFlush(toEntity(id, price, status, address, purchase, coupon));
 
         // item & detail 저장
         List<CartItem> cartItemList = cartItemRepository.findAllByCartNo(cart.getCartNo());
@@ -85,7 +91,9 @@ public class DemandService {
             demandItem.setDemandNo(demandNo);
             demandItem.setDinner(cartItemList.get(i).getDinner());
             demandItem.setStyle(cartItemList.get(i).getStyle());
-            
+            demandItem.setPrice(cartItemList.get(i).getPrice());
+            price += demandItem.getPrice();
+
             DemandItem savedDemandItem = demandItemRepository.saveAndFlush(demandItem);
 
             Long cartItemNo = cartItemList.get(i).getCartItemNo();
@@ -98,10 +106,16 @@ public class DemandService {
                 demandDetail.setDemandItemNo(savedDemandItem.getDemandItemNo());
                 demandDetail.setName(cartDetailList.get(j).getName());
                 demandDetail.setStatus(cartDetailList.get(j).getStatus());
+                demandDetail.setPrice(cartDetailList.get(j).getPrice());
+                price += demandDetail.getPrice();
                 demandDetailList.add(demandDetail);
             }
             demandDetailRepository.saveAllAndFlush(demandDetailList);
         }
+
+        demand.update(price, status, address, coupon, purchase);
+        demandRepository.save(demand);
+
 
         // 장바구니 안 정보 삭제
 //        cartItemRepository.deleteAllByCartNo(cart.getCartNo());
@@ -149,7 +163,7 @@ public class DemandService {
             for(int i = 0 ; i < updateDemandItemList.size() ; i++){
                 Long demandItemNo = updateDemandItemList.get(i).getDemandItemNo();
                 DemandItem demandItem = demandItemRepository.findById(demandItemNo).orElseThrow(() -> new IllegalArgumentException("주문한 단일 주문이 없습니다."));
-                demandItem.update(updateDemandItemList.get(i).getDinner(), updateDemandItemList.get(i).getStyle());
+                demandItem.update(updateDemandItemList.get(i).getDinner(), updateDemandItemList.get(i).getStyle(), updateDemandItemList.get(i).getPrice());
             }
         }
 
@@ -160,7 +174,7 @@ public class DemandService {
             for(int i = 0 ; i < updateDemandDetailList.size() ; i++){
                 Long demandDetailNo = updateDemandDetailList.get(i).getDemandDetailNo();
                 DemandDetail demandDetail = demandDetailRepository.findById(demandDetailNo).orElseThrow(() -> new IllegalArgumentException("주문 상세 정보가 없습니다."));
-                demandDetail.update(updateDemandDetailList.get(i).getName(), updateDemandDetailList.get(i).getStatus());
+                demandDetail.update(updateDemandDetailList.get(i).getName(), updateDemandDetailList.get(i).getStatus(), updateDemandDetailList.get(i).getPrice());
             }
         }
 
