@@ -17,7 +17,7 @@ public class CartAddress {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long CartAddressNo;
 
-    @Column
+    @Column(unique = true)
     private Long cartNo;
 
     @Column

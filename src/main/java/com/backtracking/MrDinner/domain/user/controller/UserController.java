@@ -71,16 +71,10 @@ public class UserController {
         DtoMetaData dtoMetaData;
 
         try{
-            if (requestDto.getAddress() != null){
-                userSerivce.updateAddress(requestDto, session);
-                dtoMetaData = new DtoMetaData("주소 수정 성공");
-                return ResponseEntity.ok(new UserUpdateResponseDto(dtoMetaData));
-            }
-            else{
-                userSerivce.updateUser(requestDto, session);
-                dtoMetaData = new DtoMetaData("계정 수정 성공");
-                return ResponseEntity.ok(new UserUpdateResponseDto(dtoMetaData));
-            }
+            userSerivce.updateUser(requestDto, session);
+            dtoMetaData = new DtoMetaData("계정 수정 성공");
+            return ResponseEntity.ok(new UserUpdateResponseDto(dtoMetaData));
+
         }
         catch (Exception e){
             dtoMetaData = new DtoMetaData(e.getMessage(), e.getClass().getName());
