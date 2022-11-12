@@ -80,12 +80,12 @@ public class UserSerivce {
         user.update(requestDto.getName(), requestDto.getPhoneNumber(), requestDto.getEmail(), requestDto.getNickname());
     }
 
-    @Transactional
-    public void updateAddress(UserUpdateRequestDto requestDto, HttpSession session) {
-        User user = userRepository.findById((String) session.getAttribute("id")).orElseThrow(() -> new IllegalArgumentException("해당 ID를 가진 유저가 없습니다."));
-
-        user.setAddress(requestDto.getAddress());
-    }
+//    @Transactional
+//    public void updateAddress(UserUpdateRequestDto requestDto, HttpSession session) {
+//        User user = userRepository.findById((String) session.getAttribute("id")).orElseThrow(() -> new IllegalArgumentException("해당 ID를 가진 유저가 없습니다."));
+//
+//        user.setAddress(requestDto.getAddress());
+//    }
 
     // 회원 탈퇴
     @Transactional

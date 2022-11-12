@@ -6,7 +6,6 @@ import com.backtracking.MrDinner.domain.user.repository.User;
 import com.backtracking.MrDinner.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.transaction.Transactional;
 

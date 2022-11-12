@@ -31,7 +31,6 @@ public class UserCreateRequestDto {
                 .email(email)
                 .nickname(nickname)
                 .department(department)
-                .address(null)
                 .build();
     }
 }

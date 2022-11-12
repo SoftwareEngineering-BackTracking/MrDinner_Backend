@@ -60,7 +60,7 @@ public class DemandService {
         // address
         CartAddress cartAddress = cartAddressRepository.findByCartNo(cart.getCartNo());
         Long address = cartAddress.getCartAddressNo();
-        //cartAddressRepository.deleteByCartNo(cart.getCartNo());
+        cartAddressRepository.deleteByCartNo(cart.getCartNo());
 
         // coupon
         CartCoupon cartCoupon = cartCouponRepository.findByCartNo(cart.getCartNo());
@@ -68,12 +68,12 @@ public class DemandService {
         if(cartCoupon != null){
             coupon = cartCoupon.getCartCouponNo();
         }
-        //cartCouponRepository.deleteByCartNo(cart.getCartNo());
+        cartCouponRepository.deleteByCartNo(cart.getCartNo());
 
         // purchase
         CartPurchase cartPurchase = cartPurchaseRepository.findByCartNo(cart.getCartNo());
         Long purchase=  cartPurchase.getCartPurchaseNo();
-        //cartPurchaseRepository.deleteByCartNo(cart.getCartNo());
+        cartPurchaseRepository.deleteByCartNo(cart.getCartNo());
 
         Demand demand = demandRepository.saveAndFlush(toEntity(id, price, status, address, purchase, coupon));
 
@@ -113,7 +113,6 @@ public class DemandService {
                 System.out.println(styleIngredientLists.get(j).getStyleIngredient());
                 styleIngredientLists.get(j).update(quantity, dinnerIngredientLists.get(i).getDemandDate());
             }
-            System.out.println("item 재고 파악 완료");
             DemandItem savedDemandItem = demandItemRepository.saveAndFlush(demandItem);
 
             Long cartItemNo = cartItemList.get(i).getCartItemNo();
@@ -171,11 +170,11 @@ public class DemandService {
 
 
         // 장바구니 안 정보 삭제
-//        cartItemRepository.deleteAllByCartNo(cart.getCartNo());
-//        for(int i = 0 ; i < cartItemList.size() ; i++){
-//            Long cartItemNo = cartItemList.get(i).getCartItemNo();
-//            cartDetailRepository.deleteAllByCartItemNo(cartItemNo);
-//        }
+        cartItemRepository.deleteAllByCartNo(cart.getCartNo());
+        for(int i = 0 ; i < cartItemList.size() ; i++){
+            Long cartItemNo = cartItemList.get(i).getCartItemNo();
+            cartDetailRepository.deleteAllByCartItemNo(cartItemNo);
+        }
 
     }
 
