@@ -1,5 +1,7 @@
 package com.backtracking.MrDinner.domain.demand.repository;
 
+import com.backtracking.MrDinner.domain.dinner.repository.DinnerList;
+import com.backtracking.MrDinner.domain.style.repository.StyleList;
 import com.backtracking.MrDinner.global.entitiy.BaseEntity;
 import com.backtracking.MrDinner.global.enumpackage.Dinner;
 import com.backtracking.MrDinner.global.enumpackage.Style;
@@ -23,18 +25,21 @@ public class DemandItem extends BaseEntity {
     @Generated(GenerationTime.INSERT)
     private Long demandItemNo;
 
-    @Column
-    private Long demandNo;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn
+    private Demand demandNo;
 
-    @Column
-    private Dinner dinner;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn
+    private DinnerList dinner;
 
-    @Column
-    private Style style;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn
+    private StyleList style;
 
     @Column
     private Long price;
-    public void update(Dinner dinner, Style style, Long price) {
+    public void update(DinnerList dinner, StyleList style, Long price) {
         this.dinner = dinner;
         this.style = style;
         this.price = price;

@@ -6,6 +6,8 @@ import com.backtracking.MrDinner.domain.coupon.repository.Coupon;
 import com.backtracking.MrDinner.domain.coupon.repository.CouponRepository;
 import com.backtracking.MrDinner.domain.purchase.repository.Purchase;
 import com.backtracking.MrDinner.domain.purchase.repository.PurchaseRepository;
+import com.backtracking.MrDinner.domain.user.repository.User;
+import com.backtracking.MrDinner.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -20,22 +22,24 @@ public class PaymentService {
     private final PurchaseRepository purchaseRepository;
     private final CartPurchaseRepository cartPurchaseRepository;
     private final CartRepository cartRepository;
-
+    private final UserRepository userRepository;
     public void payCart(PaymentRequestDto requestDto, HttpSession session) {
         String id = (String) session.getAttribute("id");
-        Cart cart = cartRepository.findByUserId(id);
+        User user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
+        Cart cart = cartRepository.findByUserId(user);
 
         if(requestDto.getCouponNo() != null) {
-            Coupon coupon = couponRepository.findByCouponNoAndUserId(requestDto.getCouponNo(), id);
+            Coupon coupon = couponRepository.findByCouponNoAndUserId(requestDto.getCouponNo(), user);
             if(coupon == null){
                 throw new IllegalArgumentException("해당 쿠폰이 없습니다.");
             }
             CartCoupon cartCoupon = new CartCoupon();
+            cartCoupon.setCoupon(coupon);
             cartCoupon.setName(coupon.getName());
             cartCoupon.setPrice(coupon.getPrice());
             cartCoupon.setStartTime(coupon.getStartTime());
             cartCoupon.setEndTime(coupon.getEndTime());
-            cartCoupon.setCartNo(cart.getCartNo());
+            cartCoupon.setCartNo(cart);
             cartCouponRepository.save(cartCoupon);
         }
 
@@ -45,9 +49,10 @@ public class PaymentService {
         }
 
         CartPurchase cartPurchase = new CartPurchase();
+        cartPurchase.setPurchase(purchase);
         cartPurchase.setCardNumber(purchase.getCardNumber());
         cartPurchase.setBank(purchase.getBank());
-        cartPurchase.setCartNo(cart.getCartNo());
+        cartPurchase.setCartNo(cart);
         cartPurchaseRepository.save(cartPurchase);
     }
 }

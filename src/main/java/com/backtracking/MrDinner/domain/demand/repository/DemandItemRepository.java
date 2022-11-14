@@ -7,5 +7,5 @@ import java.util.List;
 
 @Repository
 public interface DemandItemRepository extends JpaRepository<DemandItem, Long> {
-    List<DemandItem> findAllByDemandNo(Long demandno);
+    List<DemandItem> findAllByDemandNo(Demand demandno);
 }

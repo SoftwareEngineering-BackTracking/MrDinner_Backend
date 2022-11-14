@@ -1,8 +1,12 @@
 package com.backtracking.MrDinner.domain.demand.service;
 
+import com.backtracking.MrDinner.domain.address.repository.Address;
+import com.backtracking.MrDinner.domain.address.repository.AddressRepository;
 import com.backtracking.MrDinner.domain.address.repository.CartAddress;
 import com.backtracking.MrDinner.domain.address.repository.CartAddressRepository;
 import com.backtracking.MrDinner.domain.cart.repository.*;
+import com.backtracking.MrDinner.domain.coupon.repository.Coupon;
+import com.backtracking.MrDinner.domain.coupon.repository.CouponRepository;
 import com.backtracking.MrDinner.domain.demand.dto.DemandCancelRequestDto;
 import com.backtracking.MrDinner.domain.demand.dto.DemandCreateRequestDto;
 import com.backtracking.MrDinner.domain.demand.dto.DemandFetchRequestDto;
@@ -10,8 +14,12 @@ import com.backtracking.MrDinner.domain.demand.dto.DemandUpdateRequestDto;
 import com.backtracking.MrDinner.domain.demand.repository.*;
 import com.backtracking.MrDinner.domain.dinner.repository.DinnerIngredientList;
 import com.backtracking.MrDinner.domain.dinner.repository.DinnerIngredientRepository;
+import com.backtracking.MrDinner.domain.purchase.repository.Purchase;
+import com.backtracking.MrDinner.domain.purchase.repository.PurchaseRepository;
 import com.backtracking.MrDinner.domain.style.repository.StyleIngredientList;
 import com.backtracking.MrDinner.domain.style.repository.StyleIngredientRepository;
+import com.backtracking.MrDinner.domain.user.repository.User;
+import com.backtracking.MrDinner.domain.user.repository.UserRepository;
 import com.backtracking.MrDinner.global.enumpackage.*;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -34,7 +42,12 @@ public class DemandService {
     private final CartPurchaseRepository cartPurchaseRepository;
     private final DinnerIngredientRepository dinnerIngredientRepository;
     private final StyleIngredientRepository styleIngredientRepository;
-    public Demand toEntity(String userId, Long price, DemandStatus status, Long address, Long coupon, Long purchase){
+    private final UserRepository userRepository;
+    private final PurchaseRepository purchaseRepository;
+    private final AddressRepository addressRepository;
+    private final CouponRepository couponRepository;
+
+    public Demand toEntity(User userId, Long price, DemandStatus status, Address address, Coupon coupon, Purchase purchase){
         return Demand.builder()
                 .userId(userId)
                 .price(null)
@@ -47,7 +60,8 @@ public class DemandService {
 
     public void createDemand(DemandCreateRequestDto requestDto, HttpSession session) {
         String id = (String) session.getAttribute("id");
-        Cart cart = cartRepository.findByUserId(id);
+        User user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
+        Cart cart = cartRepository.findByUserId(user);
 
         // demand price, status, address, coupon, purchase 저장
 
@@ -58,35 +72,34 @@ public class DemandService {
         DemandStatus status = DemandStatus.주문_대기;
 
         // address
-        CartAddress cartAddress = cartAddressRepository.findByCartNo(cart.getCartNo());
-        Long address = cartAddress.getCartAddressNo();
-        cartAddressRepository.deleteByCartNo(cart.getCartNo());
+        CartAddress cartAddress = cartAddressRepository.findByCartNo(cart);
+        Address address = cartAddress.getAddress();
+        cartAddressRepository.deleteByCartNo(cart);
 
         // coupon
-        CartCoupon cartCoupon = cartCouponRepository.findByCartNo(cart.getCartNo());
-        Long coupon = null;
+        CartCoupon cartCoupon = cartCouponRepository.findByCartNo(cart);
+        Coupon coupon = null;
         if(cartCoupon != null){
-            coupon = cartCoupon.getCartCouponNo();
+            coupon = cartCoupon.getCoupon();
         }
-        cartCouponRepository.deleteByCartNo(cart.getCartNo());
+        cartCouponRepository.deleteByCartNo(cart);
 
         // purchase
-        CartPurchase cartPurchase = cartPurchaseRepository.findByCartNo(cart.getCartNo());
-        Long purchase=  cartPurchase.getCartPurchaseNo();
-        cartPurchaseRepository.deleteByCartNo(cart.getCartNo());
+        CartPurchase cartPurchase = cartPurchaseRepository.findByCartNo(cart);
+        Purchase purchase = cartPurchase.getPurchase();
+        cartPurchaseRepository.deleteByCartNo(cart);
 
-        Demand demand = demandRepository.saveAndFlush(toEntity(id, price, status, address, purchase, coupon));
+        Demand demand = demandRepository.saveAndFlush(toEntity(user, price, status, address, coupon, purchase));
 
         // item & detail 저장
-        List<CartItem> cartItemList = cartItemRepository.findAllByCartNo(cart.getCartNo());
+        List<CartItem> cartItemList = cartItemRepository.findAllByCartNo(cart);
         if(cartItemList.isEmpty()){
             throw new IllegalArgumentException("장바구니에 담긴 주문이 없습니다.");
         }
-        Long demandNo = demand.getDemandno();
 
         for(int i = 0 ; i < cartItemList.size() ; i++){
             DemandItem demandItem = new DemandItem();
-            demandItem.setDemandNo(demandNo);
+            demandItem.setDemandNo(demand);
             demandItem.setDinner(cartItemList.get(i).getDinner());
             demandItem.setStyle(cartItemList.get(i).getStyle());
             demandItem.setPrice(cartItemList.get(i).getPrice());
@@ -115,14 +128,12 @@ public class DemandService {
             }
             DemandItem savedDemandItem = demandItemRepository.saveAndFlush(demandItem);
 
-            Long cartItemNo = cartItemList.get(i).getCartItemNo();
-
-            List<CartDetail> cartDetailList = cartDetailRepository.findAllByCartItemNo(cartItemNo);
+            List<CartDetail> cartDetailList = cartDetailRepository.findAllByCartItemNo(cartItemList.get(i));
 
             List<DemandDetail> demandDetailList = new ArrayList<>();
             for(int j = 0 ; j < cartDetailList.size() ; j++){
                 DemandDetail demandDetail = new DemandDetail();
-                demandDetail.setDemandItemNo(savedDemandItem.getDemandItemNo());
+                demandDetail.setDemandItemNo(savedDemandItem);
                 demandDetail.setName(cartDetailList.get(j).getName());
                 demandDetail.setStatus(cartDetailList.get(j).getStatus());
                 demandDetail.setPrice(cartDetailList.get(j).getPrice());
@@ -170,26 +181,26 @@ public class DemandService {
 
 
         // 장바구니 안 정보 삭제
-        cartItemRepository.deleteAllByCartNo(cart.getCartNo());
         for(int i = 0 ; i < cartItemList.size() ; i++){
-            Long cartItemNo = cartItemList.get(i).getCartItemNo();
-            cartDetailRepository.deleteAllByCartItemNo(cartItemNo);
+            cartDetailRepository.deleteAllByCartItemNo(cartItemList.get(i));
         }
+        cartItemRepository.deleteAllByCartNo(cart);
 
     }
 
     @Transactional
     public OrderInfo fetchDemand(DemandFetchRequestDto requestDto, HttpSession session) {
         String id = (String) session.getAttribute("id");
-        List<Demand> demandList = demandRepository.findAllByUserId(id);
+        User user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
+        List<Demand> demandList = demandRepository.findAllByUserId(user);
         List<List<DemandItem>> demandItemList = new ArrayList<>();
         List<List<DemandDetail>> demandDetailList = new ArrayList<>();
 
         for(int i = 0 ; i < demandList.size() ; i++){
-                List<DemandItem> demandItem = demandItemRepository.findAllByDemandNo(demandList.get(i).getDemandno());
+                List<DemandItem> demandItem = demandItemRepository.findAllByDemandNo(demandList.get(i));
                 demandItemList.add(demandItem);
             for(int j = 0; j < demandItem.size() ; j++){
-                List<DemandDetail> demandDetail = demandDetailRepository.findAllByDemandItemNo(demandItem.get(j).getDemandItemNo());
+                List<DemandDetail> demandDetail = demandDetailRepository.findAllByDemandItemNo(demandItem.get(j));
                 demandDetailList.add(demandDetail);
             }
         }

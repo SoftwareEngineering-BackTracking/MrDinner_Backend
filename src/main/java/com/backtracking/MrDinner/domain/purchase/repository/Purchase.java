@@ -1,5 +1,6 @@
 package com.backtracking.MrDinner.domain.purchase.repository;
 
+import com.backtracking.MrDinner.domain.user.repository.User;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,8 +17,9 @@ public class Purchase {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long purchaseNo;
 
-    @Column
-    private String userId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn
+    private User userId;
 
     @Column
     private String cardNumber;
@@ -26,7 +28,7 @@ public class Purchase {
     private String bank;
 
     @Builder
-    public Purchase(String userId, String cardNumber, String bank){
+    public Purchase(User userId, String cardNumber, String bank){
         this.userId = userId;
         this.cardNumber = cardNumber;
         this.bank = bank;

@@ -23,8 +23,9 @@ public class CartDetail extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long cartDetailNo;
 
-    @Column
-    private Long cartItemNo;
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn
+    private CartItem cartItemNo;
 
     @Column
     private String name;
@@ -40,7 +41,7 @@ public class CartDetail extends BaseEntity {
     private DinnerStyle dinnerStyle;
 
     @Builder
-    public CartDetail(Long cartItemNo, String name, DetailStatus status, Long price, DinnerStyle dinnerStyle) {
+    public CartDetail(CartItem cartItemNo, String name, DetailStatus status, Long price, DinnerStyle dinnerStyle) {
         this.cartItemNo = cartItemNo;
         this.name = name;
         this.status = status;

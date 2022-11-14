@@ -6,6 +6,8 @@ import com.backtracking.MrDinner.domain.dinner.dto.DinnerIngredientFetchRequestD
 import com.backtracking.MrDinner.domain.dinner.dto.DinnerIngredientUpdateRequestDto;
 import com.backtracking.MrDinner.domain.dinner.repository.DinnerIngredientList;
 import com.backtracking.MrDinner.domain.dinner.repository.DinnerIngredientRepository;
+import com.backtracking.MrDinner.domain.dinner.repository.DinnerList;
+import com.backtracking.MrDinner.domain.dinner.repository.DinnerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,13 +19,13 @@ import java.util.List;
 @RequiredArgsConstructor
 public class DinnerIngredientService {
     private final DinnerIngredientRepository dinnerIngredientRepository;
-
+    private final DinnerRepository dinnerRepository;
     public void createDinnerIngredient(DinnerIngredientCreateRequestDto requestDto) {
         if(dinnerIngredientRepository.existsById(requestDto.getDinnerIngredient())) {
             throw new IllegalArgumentException("이미 있는 재료입니다.");
         }
-
-        dinnerIngredientRepository.save(requestDto.toEntity(requestDto.getDinnerIngredient(), requestDto.getDinner(), requestDto.getPrice(), requestDto.getQuantity(), requestDto.getDemandDate()));
+        DinnerList dinnerList = dinnerRepository.findById(requestDto.getDinner()).orElseThrow(() -> new IllegalArgumentException("없는 디너입니다."));
+        dinnerIngredientRepository.save(requestDto.toEntity(requestDto.getDinnerIngredient(), dinnerList, requestDto.getPrice(), requestDto.getQuantity(), requestDto.getDemandDate()));
 
     }
 

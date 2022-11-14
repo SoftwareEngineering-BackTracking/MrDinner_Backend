@@ -13,7 +13,7 @@ public class CouponCreateRequestDto {
     private String name;
     private Long price;
 
-    public Coupon toEntity(String userId){
+    public Coupon toEntity(User userId){
         return Coupon.builder()
                 .userId(userId)
                 .startTime(startTime)

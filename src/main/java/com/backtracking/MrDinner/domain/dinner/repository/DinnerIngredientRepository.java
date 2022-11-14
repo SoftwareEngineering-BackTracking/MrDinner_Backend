@@ -7,5 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface DinnerIngredientRepository extends JpaRepository<DinnerIngredientList, DinnerIngredient> {
-    List<DinnerIngredientList> findAllByDinner(Dinner dinner);
+    List<DinnerIngredientList> findAllByDinner(DinnerList dinner);
 }

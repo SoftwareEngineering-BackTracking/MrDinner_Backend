@@ -6,9 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Date;
 
 @Entity
@@ -20,8 +18,9 @@ public class StyleIngredientList {
     @Column
     private StyleIngredient styleIngredient;
 
-    @Column
-    private Style style;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn
+    private StyleList style;
 
     @Column
     private Long price;
@@ -33,7 +32,7 @@ public class StyleIngredientList {
     private Date demandDate;
 
     @Builder
-    public StyleIngredientList(StyleIngredient styleIngredient, Style style, Long price, Long quantity, Date demandDate){
+    public StyleIngredientList(StyleIngredient styleIngredient, StyleList style, Long price, Long quantity, Date demandDate){
         this.styleIngredient = styleIngredient;
         this.style = style;
         this.price = price;

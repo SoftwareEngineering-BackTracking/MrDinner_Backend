@@ -1,5 +1,7 @@
 package com.backtracking.MrDinner.domain.cart.repository;
 
+import com.backtracking.MrDinner.domain.coupon.repository.Coupon;
+import com.backtracking.MrDinner.domain.purchase.repository.Purchase;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -16,8 +18,9 @@ public class CartPurchase {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long cartPurchaseNo;
 
-    @Column(unique = true)
-    private Long cartNo;
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn
+    private Cart cartNo;
 
     @Column
     private String cardNumber;
@@ -25,4 +28,7 @@ public class CartPurchase {
     @Column
     private String bank;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn
+    private Purchase purchase;
 }

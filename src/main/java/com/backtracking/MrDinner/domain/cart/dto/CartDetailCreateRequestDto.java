@@ -17,9 +17,9 @@ public class CartDetailCreateRequestDto {
     private List<DinnerStyle> dinnerStyles;
 
 
-    public CartDetail toEntity(int index, Long price){
+    public CartDetail toEntity(CartItem cartItem, int index, Long price){
         return CartDetail.builder()
-                .cartItemNo(cartItemNo)
+                .cartItemNo(cartItem)
                 .name(name.get(index))
                 .status(status.get(index))
                 .price(price)

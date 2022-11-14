@@ -1,6 +1,7 @@
 package com.backtracking.MrDinner.domain.style.dto;
 
 import com.backtracking.MrDinner.domain.style.repository.StyleIngredientList;
+import com.backtracking.MrDinner.domain.style.repository.StyleList;
 import com.backtracking.MrDinner.global.enumpackage.Style;
 import com.backtracking.MrDinner.global.enumpackage.StyleIngredient;
 import lombok.Data;
@@ -16,7 +17,7 @@ public class StyleIngredientCreateRequestDto {
     private Long quantity;
     private Date demandDate;
 
-    public StyleIngredientList toEntity(StyleIngredient styleIngredient, Style style, Long price, Long quantity, Date demandDate){
+    public StyleIngredientList toEntity(StyleIngredient styleIngredient, StyleList style, Long price, Long quantity, Date demandDate){
         return StyleIngredientList.builder()
                 .styleIngredient(styleIngredient)
                 .style(style)
