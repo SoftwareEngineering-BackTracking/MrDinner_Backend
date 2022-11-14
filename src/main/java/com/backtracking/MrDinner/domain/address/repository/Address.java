@@ -1,5 +1,6 @@
 package com.backtracking.MrDinner.domain.address.repository;
 
+import com.backtracking.MrDinner.domain.user.repository.User;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,15 +16,16 @@ public class Address {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long addressNo;
 
-    @Column
-    private String userId;
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn
+    private User userId;
 
     @Column
     private String detail;
 
 
     @Builder
-    public Address(String userId, String detail){
+    public Address(User userId, String detail){
         this.userId = userId;
         this.detail = detail;
     }

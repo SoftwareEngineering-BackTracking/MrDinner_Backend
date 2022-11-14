@@ -1,5 +1,7 @@
 package com.backtracking.MrDinner.domain.cart.repository;
 
+import com.backtracking.MrDinner.domain.dinner.repository.DinnerList;
+import com.backtracking.MrDinner.domain.style.repository.StyleList;
 import com.backtracking.MrDinner.global.entitiy.BaseEntity;
 import com.backtracking.MrDinner.global.enumpackage.Dinner;
 import com.backtracking.MrDinner.global.enumpackage.Style;
@@ -18,27 +20,32 @@ public class CartItem extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long cartItemNo;
 
-    @Column
-    private Long cartNo;
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn
+    private Cart cartNo;
 
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn
     @Enumerated(EnumType.STRING)
-    private Dinner dinner;
+    private DinnerList dinner;
 
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn
     @Enumerated(EnumType.STRING)
-    private Style style;
+    private StyleList style;
 
     @Column
     private Long price;
 
     @Builder
-    public CartItem(Long cartNo, Dinner dinner, Style style, Long price) {
+    public CartItem(Cart cartNo, DinnerList dinner, StyleList style, Long price) {
         this.cartNo = cartNo;
         this.dinner = dinner;
         this.style = style;
         this.price = price;
     }
 
-    public void update(Dinner dinner, Style style){
+    public void update(DinnerList dinner, StyleList style){
         this.dinner = dinner;
         this.style = style;
     }

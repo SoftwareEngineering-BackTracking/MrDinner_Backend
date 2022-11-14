@@ -21,8 +21,9 @@ public class DemandDetail extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long demandDetailNo;
 
-    @Column
-    private Long demandItemNo;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn
+    private DemandItem demandItemNo;
 
     @Column
     private String name;

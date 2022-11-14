@@ -1,5 +1,6 @@
 package com.backtracking.MrDinner.domain.cart.repository;
 
+import com.backtracking.MrDinner.domain.user.repository.User;
 import com.backtracking.MrDinner.global.entitiy.BaseEntity;
 import com.backtracking.MrDinner.global.enumpackage.Department;
 import lombok.Builder;
@@ -20,11 +21,12 @@ public class Cart extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long cartNo;
 
-    @Column
-    private String userId;
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn
+    private User userId;
 
     @Builder
-    public Cart(String userId){
+    public Cart(User userId){
         this.userId = userId;
     }
 }

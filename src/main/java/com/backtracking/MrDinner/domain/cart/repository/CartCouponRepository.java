@@ -7,8 +7,8 @@ import javax.transaction.Transactional;
 
 @Repository
 public interface CartCouponRepository extends JpaRepository<CartCoupon, Long> {
-    CartCoupon findByCartNo(Long cartNo);
+    CartCoupon findByCartNo(Cart cartNo);
 
     @Transactional
-    void deleteByCartNo(Long cartNo);
+    void deleteByCartNo(Cart cartNo);
 }

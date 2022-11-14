@@ -1,5 +1,6 @@
 package com.backtracking.MrDinner.domain.cart.repository;
 
+import com.backtracking.MrDinner.domain.coupon.repository.Coupon;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -17,8 +18,9 @@ public class CartCoupon {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long cartCouponNo;
 
-    @Column(unique = true)
-    private Long cartNo;
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn
+    private Cart cartNo;
 
     @Column
     private Date startTime;
@@ -31,4 +33,8 @@ public class CartCoupon {
 
     @Column
     private String name;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn
+    private Coupon coupon;
 }

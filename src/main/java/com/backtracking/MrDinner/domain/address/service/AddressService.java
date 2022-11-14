@@ -10,6 +10,8 @@ import com.backtracking.MrDinner.domain.address.repository.CartAddress;
 import com.backtracking.MrDinner.domain.address.repository.CartAddressRepository;
 import com.backtracking.MrDinner.domain.cart.repository.Cart;
 import com.backtracking.MrDinner.domain.cart.repository.CartRepository;
+import com.backtracking.MrDinner.domain.user.repository.User;
+import com.backtracking.MrDinner.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.stereotype.Service;
@@ -24,28 +26,33 @@ public class AddressService {
     private final CartRepository cartRepository;
     private final AddressRepository addressRepository;
     private final CartAddressRepository cartAddressRepository;
+    private final UserRepository userRepository;
 
     public void createAddress(AddressCreateRequestDto requestDto, HttpSession session) {
         String id = (String) session.getAttribute("id");
-        Cart cart = cartRepository.findByUserId(id);
-        Address duplicateAddress = addressRepository.findByDetailAndUserId(requestDto.getDetail(), id);
+        User user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
+        Cart cart = cartRepository.findByUserId(user);
+        Address duplicateAddress = addressRepository.findByDetailAndUserId(requestDto.getDetail(), user);
 
         CartAddress cartAddress = new CartAddress();
-        cartAddress.setCartNo(cart.getCartNo());
+        cartAddress.setCartNo(cart);
         cartAddress.setDetail(requestDto.getDetail());
 
         if(duplicateAddress == null){
             // 이전에 없던 새로운 주소
-            addressRepository.save(requestDto.toEntity(id));
+            Address address = addressRepository.save(requestDto.toEntity(user));
+            cartAddress.setAddress(address);
             cartAddressRepository.save(cartAddress);
         }
         else{
-            if (cartAddressRepository.findByCartNo(cart.getCartNo()) == null){
+            if (cartAddressRepository.findByCartNo(cart) == null){
                 // 기존에 있던 주소
+                cartAddress.setAddress(duplicateAddress);
                 cartAddressRepository.save(cartAddress);
             }
             else{
-                cartAddressRepository.deleteByCartNo(cart.getCartNo());
+                cartAddressRepository.deleteByCartNo(cart);
+                cartAddress.setAddress(duplicateAddress);
                 cartAddressRepository.save(cartAddress);
             }
         }
@@ -53,7 +60,8 @@ public class AddressService {
     @Transactional
     public List<Address> fetchAddress(AddressFetchRequestDto requestDto, HttpSession session) {
         String id = (String) session.getAttribute("id");
-        List<Address> addressList = addressRepository.findAllByUserId(id);
+        User user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
+        List<Address> addressList = addressRepository.findAllByUserId(user);
 
         if(addressList.isEmpty()){
             throw new IllegalArgumentException("저장된 주소가 없습니다.");
@@ -65,7 +73,8 @@ public class AddressService {
     @Transactional
     public void updateAddress(AddressUpdateRequestDto requestDto, HttpSession session) {
         String id = (String) session.getAttribute("id");
-        Address address = addressRepository.findAllByAddressNoAndUserId(requestDto.getAddressNo(), id);
+        User user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
+        Address address = addressRepository.findAllByAddressNoAndUserId(requestDto.getAddressNo(), user);
         if (address == null) {
             throw new IllegalArgumentException("해당 주소가 없습니다.");
         }
@@ -75,7 +84,8 @@ public class AddressService {
     @Transactional
     public void deleteAddress(AddressDeleteRequestDto requestDto, HttpSession session) {
         String id = (String) session.getAttribute("id");
-        Address address= addressRepository.findAllByAddressNoAndUserId(requestDto.getAddressNo(), id);
+        User user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
+        Address address= addressRepository.findAllByAddressNoAndUserId(requestDto.getAddressNo(), user);
         if (address == null) {
             throw new IllegalArgumentException("해당 주소가 없습니다.");
         }

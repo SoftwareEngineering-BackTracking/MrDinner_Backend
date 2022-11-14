@@ -1,5 +1,9 @@
 package com.backtracking.MrDinner.domain.demand.repository;
 
+import com.backtracking.MrDinner.domain.address.repository.Address;
+import com.backtracking.MrDinner.domain.coupon.repository.Coupon;
+import com.backtracking.MrDinner.domain.purchase.repository.Purchase;
+import com.backtracking.MrDinner.domain.user.repository.User;
 import com.backtracking.MrDinner.global.entitiy.BaseEntity;
 import com.backtracking.MrDinner.global.enumpackage.DemandStatus;
 import com.backtracking.MrDinner.global.enumpackage.Dinner;
@@ -24,8 +28,9 @@ public class Demand extends BaseEntity {
     @Generated(GenerationTime.INSERT)
     private Long demandno;
 
-    @Column
-    private String userId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn
+    private User userId;
 
     @Column
     private Long price;
@@ -33,17 +38,20 @@ public class Demand extends BaseEntity {
     @Column
     private DemandStatus status;
 
-    @Column
-    private Long address;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn
+    private Address address;
 
-    @Column
-    private Long coupon;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn
+    private Coupon coupon;
 
-    @Column
-    private Long purchase;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn
+    private Purchase purchase;
 
     @Builder
-    public Demand(String userId, Long price, DemandStatus status, Long address, Long coupon, Long purchase){
+    public Demand(User userId, Long price, DemandStatus status, Address address, Coupon coupon, Purchase purchase){
         this.userId = userId;
         this.price = price;
         this.status = status;
@@ -52,7 +60,7 @@ public class Demand extends BaseEntity {
         this.purchase = purchase;
     }
 
-    public void update(Long price, DemandStatus status, Long address, Long coupon, Long purchase){
+    public void update(Long price, DemandStatus status, Address address, Coupon coupon, Purchase purchase){
         this.price = price;
         this.status = status;
         this.address = address;

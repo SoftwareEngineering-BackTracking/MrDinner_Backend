@@ -6,6 +6,8 @@ import com.backtracking.MrDinner.domain.style.dto.StyleIngredientFetchRequestDto
 import com.backtracking.MrDinner.domain.style.dto.StyleIngredientUpdateRequestDto;
 import com.backtracking.MrDinner.domain.style.repository.StyleIngredientList;
 import com.backtracking.MrDinner.domain.style.repository.StyleIngredientRepository;
+import com.backtracking.MrDinner.domain.style.repository.StyleList;
+import com.backtracking.MrDinner.domain.style.repository.StyleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,14 +19,14 @@ import java.util.List;
 @RequiredArgsConstructor
 public class StyleIngredientService {
     private final StyleIngredientRepository styleIngredientRepository;
-
+    private final StyleRepository styleRepository;
     @Transactional
     public void createStyleIngredient(StyleIngredientCreateRequestDto requestDto) {
         if(styleIngredientRepository.existsById(requestDto.getStyleIngredient())) {
             throw new IllegalArgumentException("이미 있는 재료입니다.");
         }
-
-        styleIngredientRepository.save(requestDto.toEntity(requestDto.getStyleIngredient(), requestDto.getStyle(), requestDto.getPrice(), requestDto.getQuantity(), requestDto.getDemandDate()));
+        StyleList styleList = styleRepository.findById(requestDto.getStyle()).orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
+        styleIngredientRepository.save(requestDto.toEntity(requestDto.getStyleIngredient(), styleList, requestDto.getPrice(), requestDto.getQuantity(), requestDto.getDemandDate()));
 
     }
 

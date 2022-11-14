@@ -9,5 +9,5 @@ import java.util.List;
 
 @Repository
 public interface StyleIngredientRepository extends JpaRepository<StyleIngredientList, StyleIngredient> {
-    List<StyleIngredientList> findAllByStyle(Style style);
+    List<StyleIngredientList> findAllByStyle(StyleList style);
 }

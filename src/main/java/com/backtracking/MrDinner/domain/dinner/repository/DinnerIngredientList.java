@@ -6,10 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Date;
 
 @Entity
@@ -20,8 +17,9 @@ public class DinnerIngredientList {
     @Column
     private DinnerIngredient dinnerIngredient;
 
-    @Column
-    private Dinner dinner;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn
+    private DinnerList dinner;
 
     @Column
     private Long price;
@@ -33,7 +31,7 @@ public class DinnerIngredientList {
     private Date demandDate;
 
     @Builder
-    public DinnerIngredientList(DinnerIngredient dinnerIngredient, Dinner dinner, Long price, Long quantity, Date demandDate){
+    public DinnerIngredientList(DinnerIngredient dinnerIngredient, DinnerList dinner, Long price, Long quantity, Date demandDate){
         this.dinnerIngredient = dinnerIngredient;
         this.dinner = dinner;
         this.price = price;
