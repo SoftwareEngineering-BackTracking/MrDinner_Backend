@@ -3,6 +3,7 @@ package com.backtracking.MrDinner.global.mail;
 import com.backtracking.MrDinner.global.security.AuthCodeService;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
@@ -18,7 +19,7 @@ import java.time.chrono.MinguoEra;
 @Component
 @RequiredArgsConstructor
 public class MailService {
-
+    @Autowired
     private final JavaMailSender javaMailSender;
     private final AuthCodeService authCodeService;
 
