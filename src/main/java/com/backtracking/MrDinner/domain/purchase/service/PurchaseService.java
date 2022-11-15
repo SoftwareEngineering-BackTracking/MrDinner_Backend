@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -30,7 +31,7 @@ public class PurchaseService {
     }
 
     @Transactional
-    public List<Purchase> fetchPurchase(PurchaseFetchRequestDto requestDto, HttpSession session) {
+    public List<Purchase> fetchMyPurchase(PurchaseFetchRequestDto requestDto, HttpSession session) {
         String id = (String) session.getAttribute("id");
         User user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
         List<Purchase> purchaseList = purchaseRepository.findAllByUserId(user);
@@ -51,5 +52,15 @@ public class PurchaseService {
             throw new IllegalArgumentException("해당 결제 정보가 없습니다.");
         }
         purchaseRepository.delete(purchase);
+    }
+
+    @Transactional
+    public List<Purchase> fetchPurchase(PurchaseFetchRequestDto requestDto, HttpSession session) {
+        Purchase purchase = purchaseRepository.findById(requestDto.getPurchaseNo()).orElseThrow(() -> new IllegalArgumentException("해당 결제 정보가 없습니다."));
+
+        List<Purchase> purchaseList = new ArrayList<>();
+        purchaseList.add(purchase);
+
+        return purchaseList;
     }
 }

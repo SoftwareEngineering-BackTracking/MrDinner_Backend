@@ -41,9 +41,16 @@ public class PurchaseController {
         DtoMetaData dtoMetaData;
 
         try{
-            List<Purchase> PurchaseList = purchaseService.fetchPurchase(requestDto, session);
-            dtoMetaData = new DtoMetaData("나의 결제 정보 조회 완료");
-            return ResponseEntity.ok(new PurchaseFetchResponseDto(dtoMetaData, PurchaseList));
+            if(requestDto.getPurchaseNo() == null){
+                List<Purchase> PurchaseList = purchaseService.fetchMyPurchase(requestDto, session);
+                dtoMetaData = new DtoMetaData("나의 결제 정보 조회 완료");
+                return ResponseEntity.ok(new PurchaseFetchResponseDto(dtoMetaData, PurchaseList));
+            }
+            else{
+                List<Purchase> PurchaseList = purchaseService.fetchPurchase(requestDto, session);
+                dtoMetaData = new DtoMetaData("특정 결제 정보 조회 완료");
+                return ResponseEntity.ok(new PurchaseFetchResponseDto(dtoMetaData, PurchaseList));
+            }
         }
         catch (Exception e){
             dtoMetaData= new DtoMetaData(e.getMessage(), e.getClass().getName());

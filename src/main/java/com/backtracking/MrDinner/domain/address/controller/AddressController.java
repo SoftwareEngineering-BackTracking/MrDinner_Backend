@@ -41,9 +41,17 @@ public class AddressController {
         DtoMetaData dtoMetaData;
 
         try{
-            List<Address> addressList = addressService.fetchAddress(requestDto, session);
-            dtoMetaData = new DtoMetaData("나의 주소 조회 완료");
-            return ResponseEntity.ok(new AddressFetchResponseDto(dtoMetaData, addressList));
+            if(requestDto.getAddressNo() == null){
+                List<Address> addressList = addressService.fetchMyAddress(requestDto, session);
+                dtoMetaData = new DtoMetaData("나의 주소 조회 완료");
+                return ResponseEntity.ok(new AddressFetchResponseDto(dtoMetaData, addressList));
+            }
+            else{
+                List<Address> addressList = addressService.fetchAddress(requestDto);
+                dtoMetaData = new DtoMetaData("특정 주소 조회 완료");
+                return ResponseEntity.ok(new AddressFetchResponseDto(dtoMetaData, addressList));
+            }
+
         }
         catch (Exception e){
             dtoMetaData= new DtoMetaData(e.getMessage(), e.getClass().getName());
