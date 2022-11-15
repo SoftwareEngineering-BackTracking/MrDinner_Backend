@@ -47,9 +47,16 @@ public class CouponController {
         DtoMetaData dtoMetaData;
 
         try{
-            List<Coupon> CouponList = couponService.fetchCoupon(requestDto, session);
-            dtoMetaData = new DtoMetaData("나의 쿠폰 조회 완료");
-            return ResponseEntity.ok(new CouponFetchResponseDto(dtoMetaData, CouponList));
+            if(requestDto.getCouponNo() == null){
+                List<Coupon> CouponList = couponService.fetchMyCoupon(requestDto, session);
+                dtoMetaData = new DtoMetaData("나의 쿠폰 조회 완료");
+                return ResponseEntity.ok(new CouponFetchResponseDto(dtoMetaData, CouponList));
+            }
+            else{
+                List<Coupon> CouponList = couponService.fetchCoupon(requestDto);
+                dtoMetaData = new DtoMetaData("특정 쿠폰 조회 완료");
+                return ResponseEntity.ok(new CouponFetchResponseDto(dtoMetaData, CouponList));
+            }
         }
         catch (Exception e){
             dtoMetaData= new DtoMetaData(e.getMessage(), e.getClass().getName());

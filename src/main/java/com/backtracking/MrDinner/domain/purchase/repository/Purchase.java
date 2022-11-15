@@ -17,7 +17,7 @@ public class Purchase {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long purchaseNo;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn
     private User userId;
 

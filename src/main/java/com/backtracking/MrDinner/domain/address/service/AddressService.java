@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -57,8 +58,9 @@ public class AddressService {
             }
         }
     }
+
     @Transactional
-    public List<Address> fetchAddress(AddressFetchRequestDto requestDto, HttpSession session) {
+    public List<Address> fetchMyAddress(AddressFetchRequestDto requestDto, HttpSession session) {
         String id = (String) session.getAttribute("id");
         User user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
         List<Address> addressList = addressRepository.findAllByUserId(user);
@@ -70,6 +72,17 @@ public class AddressService {
             return addressList;
         }
     }
+
+    @Transactional
+    public List<Address> fetchAddress(AddressFetchRequestDto requestDto) {
+        Address address = addressRepository.findById(requestDto.getAddressNo()).orElseThrow(() -> new IllegalArgumentException("해당 주소가 없습니다."));
+
+        List<Address> addressList = new ArrayList<>();
+        addressList.add(address);
+
+        return addressList;
+    }
+
     @Transactional
     public void updateAddress(AddressUpdateRequestDto requestDto, HttpSession session) {
         String id = (String) session.getAttribute("id");
@@ -91,4 +104,5 @@ public class AddressService {
         }
         addressRepository.delete(address);
     }
+
 }

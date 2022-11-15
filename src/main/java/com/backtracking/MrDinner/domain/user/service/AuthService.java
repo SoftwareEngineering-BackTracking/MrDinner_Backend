@@ -5,12 +5,14 @@ import com.backtracking.MrDinner.domain.user.repository.User;
 import com.backtracking.MrDinner.domain.user.repository.UserRepository;
 import com.backtracking.MrDinner.global.mail.MailService;
 import com.backtracking.MrDinner.global.security.AuthCodeService;
+import com.backtracking.MrDinner.global.voice.VoiceToken;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
+import java.io.IOException;
 
 @Service
 @RequiredArgsConstructor
@@ -18,7 +20,7 @@ public class AuthService {
     private final AuthCodeService authCodeService;
     private final MailService mailService;
     private final UserRepository userRepository;
-
+    private final VoiceToken voiceToken;
     public void sendAuthCode(AuthCodeSendRequestDto requestDto) throws Exception {
         mailService.sendAuthCodeMail(requestDto.getEmail());
     }
@@ -28,7 +30,7 @@ public class AuthService {
     }
 
     @Transactional
-    public void login(LoginRequestDto requestDto, HttpSession session) {
+    public void login(LoginRequestDto requestDto, HttpSession session) throws IOException {
         if(session.getAttribute("id") != null){
             session.removeAttribute("id");
         }
@@ -39,6 +41,10 @@ public class AuthService {
         }
         // 세션에 id 정보 저장
         session.setAttribute("id", requestDto.getId());
+
+        // 음성인식 토큰 생성
+        String token = voiceToken.generateToken();
+        session.setAttribute("token", token);
     }
 
     @Transactional

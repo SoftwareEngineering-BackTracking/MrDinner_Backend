@@ -13,6 +13,7 @@ public class UserCreateRequestDto {
     private String id;
     private String password;
     private String name;
+    private String birth;
     private String phoneNumber;
     private String email;
     private String nickname;
@@ -27,6 +28,7 @@ public class UserCreateRequestDto {
                 .id(id)
                 .password(password)
                 .name(name)
+                .birth(birth)
                 .phoneNumber(phoneNumber)
                 .email(email)
                 .nickname(nickname)

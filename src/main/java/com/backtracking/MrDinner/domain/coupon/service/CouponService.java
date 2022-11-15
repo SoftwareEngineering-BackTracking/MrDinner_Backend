@@ -1,5 +1,6 @@
 package com.backtracking.MrDinner.domain.coupon.service;
 
+import com.backtracking.MrDinner.domain.address.repository.Address;
 import com.backtracking.MrDinner.domain.coupon.dto.CouponCreateRequestDto;
 import com.backtracking.MrDinner.domain.coupon.dto.CouponFetchRequestDto;
 import com.backtracking.MrDinner.domain.coupon.repository.Coupon;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -30,7 +32,7 @@ public class CouponService {
     }
 
     @Transactional
-    public List<Coupon> fetchCoupon(CouponFetchRequestDto requestDto, HttpSession session) {
+    public List<Coupon> fetchMyCoupon(CouponFetchRequestDto requestDto, HttpSession session) {
         String id = (String) session.getAttribute("id");
         User user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
         List<Coupon> couponList = couponRepository.findAllByUserId(user);
@@ -38,6 +40,16 @@ public class CouponService {
         if(couponList.isEmpty()){
             throw new IllegalArgumentException("가지고 있는 쿠폰이 없습니다.");
         }
+        return couponList;
+    }
+
+    @Transactional
+    public List<Coupon> fetchCoupon(CouponFetchRequestDto requestDto) {
+        Coupon coupon = couponRepository.findById(requestDto.getCouponNo()).orElseThrow(() -> new IllegalArgumentException("해당 쿠폰이 없습니다."));
+
+        List<Coupon> couponList = new ArrayList<>();
+        couponList.add(coupon);
+
         return couponList;
     }
 }
