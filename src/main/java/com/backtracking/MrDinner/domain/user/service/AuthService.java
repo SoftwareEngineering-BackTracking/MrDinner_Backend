@@ -8,6 +8,7 @@ import com.backtracking.MrDinner.global.security.AuthCodeService;
 import com.backtracking.MrDinner.global.voice.VoiceToken;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import org.json.simple.parser.ParseException;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;
@@ -30,7 +31,7 @@ public class AuthService {
     }
 
     @Transactional
-    public void login(LoginRequestDto requestDto, HttpSession session) throws IOException {
+    public void login(LoginRequestDto requestDto, HttpSession session) throws IOException, ParseException {
         if(session.getAttribute("id") != null){
             session.removeAttribute("id");
         }
