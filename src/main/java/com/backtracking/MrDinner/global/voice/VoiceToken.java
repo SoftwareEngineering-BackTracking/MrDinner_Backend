@@ -1,6 +1,9 @@
 package com.backtracking.MrDinner.global.voice;
 
 import lombok.RequiredArgsConstructor;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -15,7 +18,7 @@ import java.util.Scanner;
 @RequiredArgsConstructor
 public class VoiceToken {
 
-    public String generateToken() throws IOException{
+    public String generateToken() throws IOException, ParseException {
         URL url = new URL("https://openapi.vito.ai/v1/authenticate");
         HttpURLConnection httpConn = (HttpURLConnection) url.openConnection();
         httpConn.setRequestMethod("POST");
@@ -36,7 +39,12 @@ public class VoiceToken {
         Scanner s = new Scanner(responseStream).useDelimiter("\\A");
         String response = s.hasNext() ? s.next() : "";
         s.close();
-        System.out.println(response);
-        return response;
+
+        JSONParser parser = new JSONParser();
+        JSONObject jsonObject = (JSONObject) parser.parse(response);
+
+        String token = (String) jsonObject.get("access_token");
+
+        return token;
     }
 }
