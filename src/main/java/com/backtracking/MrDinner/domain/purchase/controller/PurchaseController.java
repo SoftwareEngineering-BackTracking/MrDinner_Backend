@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/api/purchase")
@@ -37,9 +38,9 @@ public class PurchaseController {
     }
 
     @GetMapping
-    public ResponseEntity<PurchaseFetchResponseDto> fetchPurchase(@RequestBody PurchaseFetchRequestDto requestDto, HttpSession session){
+    public ResponseEntity<PurchaseFetchResponseDto> fetchPurchase(@RequestHeader Map<String, Long> params, HttpSession session){
         DtoMetaData dtoMetaData;
-
+        PurchaseFetchRequestDto requestDto = new PurchaseFetchRequestDto(params.get("purchaseNo"));
         try{
             if(requestDto.getPurchaseNo() == null){
                 List<Purchase> PurchaseList = purchaseService.fetchMyPurchase(requestDto, session);

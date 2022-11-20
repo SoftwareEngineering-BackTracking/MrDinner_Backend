@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/api/cartitem")
@@ -53,11 +54,10 @@ public class CartItemController {
 
 
     @GetMapping
-    public ResponseEntity<CartItemFetchResponseDto> fetchCartItem(@RequestBody CartItemFetchRequestDto requestDto, HttpSession session){
+    public ResponseEntity<CartItemFetchResponseDto> fetchCartItem(HttpSession session){
         DtoMetaData dtoMetaData;
-
         try{
-            List<CartItem> cartItemList = cartItemService.fetchCartItem(requestDto, session);
+            List<CartItem> cartItemList = cartItemService.fetchCartItem(session);
             dtoMetaData = new DtoMetaData("장바구니에 담긴 모든 주문 조회 성공");
             return ResponseEntity.ok(new CartItemFetchResponseDto(dtoMetaData, cartItemList));
         }

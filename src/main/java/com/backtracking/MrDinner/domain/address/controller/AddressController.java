@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
@@ -37,9 +38,9 @@ public class AddressController {
     }
 
     @GetMapping
-    public ResponseEntity<AddressFetchResponseDto> fetchAddress(@RequestBody AddressFetchRequestDto requestDto, HttpSession session){
+    public ResponseEntity<AddressFetchResponseDto> fetchAddress(@RequestHeader Map<String, Long> params, HttpSession session){
         DtoMetaData dtoMetaData;
-
+        AddressFetchRequestDto requestDto = new AddressFetchRequestDto(params.get("addressNo"));
         try{
             if(requestDto.getAddressNo() == null){
                 List<Address> addressList = addressService.fetchMyAddress(requestDto, session);

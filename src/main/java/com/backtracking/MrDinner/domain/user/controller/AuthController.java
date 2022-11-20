@@ -39,9 +39,9 @@ public class AuthController {
     }
 
     @GetMapping("/code/verify")
-    public ResponseEntity<AuthCodeVerifyResponseDto> verifyAuthCode(@RequestBody AuthCodeVerifyRequestDto requestDto){
+    public ResponseEntity<AuthCodeVerifyResponseDto> verifyAuthCode(@RequestHeader Map<String, String> params){
         DtoMetaData dtoMetaData;
-
+        AuthCodeVerifyRequestDto requestDto = new AuthCodeVerifyRequestDto(params.get("email"), params.get("authcode"));
         try{
             authService.verifyAuthCode(requestDto);
             dtoMetaData = new DtoMetaData("인증 코드 검증 성공");
@@ -56,8 +56,6 @@ public class AuthController {
     @GetMapping("/login")
     public ResponseEntity<LoginResponseDto> login(@RequestHeader Map<String, String> params, HttpSession session){
         DtoMetaData dtoMetaData;
-        System.out.println(params.keySet());
-        System.out.println(params.values());
         LoginRequestDto requestDto = new LoginRequestDto(params.get("id"), params.get("password"));
         try{
             authService.login(requestDto, session);
@@ -71,11 +69,11 @@ public class AuthController {
     }
 
     @GetMapping("/logout")
-    public ResponseEntity<LogoutResponseDto> logout(@RequestBody LogoutRequestDto requestDto, HttpSession session){
+    public ResponseEntity<LogoutResponseDto> logout(HttpSession session){
         DtoMetaData dtoMetaData;
 
         try{
-            authService.logout(requestDto, session);
+            authService.logout(session);
             dtoMetaData = new DtoMetaData("로그아웃 성공");
             return ResponseEntity.ok(new LogoutResponseDto(dtoMetaData));
         }
@@ -86,9 +84,9 @@ public class AuthController {
     }
 
     @GetMapping("/signup/checkid")
-    public ResponseEntity<CheckIdResponseDto> checkId(@RequestBody CheckIdRequestDto requestDto){
+    public ResponseEntity<CheckIdResponseDto> checkId(@RequestHeader Map<String, String> params){
         DtoMetaData dtoMetaData;
-
+        CheckIdRequestDto requestDto = new CheckIdRequestDto(params.get("id"));
         try{
             authService.checkId(requestDto);
             dtoMetaData = new DtoMetaData("사용 가능한 아이디입니다.");

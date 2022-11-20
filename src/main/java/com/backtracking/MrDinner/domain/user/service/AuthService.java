@@ -58,7 +58,7 @@ public class AuthService {
 
 
     @Transactional
-    public void logout(LogoutRequestDto requestDto, HttpSession session) {
+    public void logout(HttpSession session) {
         String id = (String) session.getAttribute("id");
         if(id != null){
             // 세션에 아이디 정보 삭제

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
+import java.util.Map;
 
 @RequiredArgsConstructor
 @RequestMapping("/api/user")
@@ -39,9 +40,9 @@ public class UserController {
 
     // 계정 조회
     @GetMapping
-    public ResponseEntity<UserFetchResponseDto> fetchUser(@RequestBody UserFetchRequestDto requestDto){
+    public ResponseEntity<UserFetchResponseDto> fetchUser(@RequestHeader Map<String, Object> params){
         DtoMetaData dtoMetaData;
-
+        UserFetchRequestDto requestDto = new UserFetchRequestDto((String) params.get("id"), (String) params.get("name"), (Department) params.get("department"));
         try{
             if(requestDto.getId() != null){
                 User user = userSerivce.fetchUser(requestDto);
