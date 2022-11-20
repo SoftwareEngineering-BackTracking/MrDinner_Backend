@@ -12,6 +12,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.Date;
 import java.util.Scanner;
 
 @Component
@@ -40,11 +41,14 @@ public class VoiceToken {
         String response = s.hasNext() ? s.next() : "";
         s.close();
 
-        JSONParser parser = new JSONParser();
-        JSONObject jsonObject = (JSONObject) parser.parse(response);
+        JSONParser jsonParser = new JSONParser();
+        Object obj = jsonParser.parse(response);
+        JSONObject jsonObj = (JSONObject) obj;
 
-        String token = (String) jsonObject.get("access_token");
-
-        return token;
+        String accessToken = (String) jsonObj.get("access_token");
+        //Date expireAt = (Date) jsonObj.get("expire_at");
+        System.out.println(accessToken);
+        //System.out.println(expireAt);
+        return accessToken;
     }
 }

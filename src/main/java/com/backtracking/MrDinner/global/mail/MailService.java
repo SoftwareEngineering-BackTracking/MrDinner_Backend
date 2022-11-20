@@ -1,25 +1,20 @@
 package com.backtracking.MrDinner.global.mail;
 
 import com.backtracking.MrDinner.global.security.AuthCodeService;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Repository;
 
 import javax.mail.Message;
-import javax.mail.MessagingException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-import java.beans.JavaBean;
-import java.time.chrono.MinguoEra;
 
 @Component
 @RequiredArgsConstructor
 public class MailService {
-    @Autowired
+
     private final JavaMailSender javaMailSender;
     private final AuthCodeService authCodeService;
 
