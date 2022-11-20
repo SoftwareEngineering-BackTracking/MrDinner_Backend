@@ -1,27 +1,22 @@
 package com.backtracking.MrDinner.domain.cart.service;
 
-import com.backtracking.MrDinner.domain.cart.dto.CartItemCreateRequestDto;
-import com.backtracking.MrDinner.domain.cart.dto.CartItemDeleteRequestDto;
-import com.backtracking.MrDinner.domain.cart.dto.CartItemFetchRequestDto;
-import com.backtracking.MrDinner.domain.cart.dto.CartItemUpdateRequestDto;
-import com.backtracking.MrDinner.domain.cart.repository.Cart;
-import com.backtracking.MrDinner.domain.cart.repository.CartItem;
-import com.backtracking.MrDinner.domain.cart.repository.CartItemRepository;
-import com.backtracking.MrDinner.domain.cart.repository.CartRepository;
+import com.backtracking.MrDinner.domain.cart.dto.*;
+import com.backtracking.MrDinner.domain.cart.repository.*;
 import com.backtracking.MrDinner.domain.dinner.repository.DinnerList;
 import com.backtracking.MrDinner.domain.dinner.repository.DinnerRepository;
 import com.backtracking.MrDinner.domain.style.repository.StyleList;
 import com.backtracking.MrDinner.domain.style.repository.StyleRepository;
 import com.backtracking.MrDinner.domain.user.repository.User;
 import com.backtracking.MrDinner.domain.user.repository.UserRepository;
-import com.backtracking.MrDinner.global.enumpackage.Dinner;
-import com.backtracking.MrDinner.global.enumpackage.Style;
+import com.backtracking.MrDinner.global.voice.DinnerStyleVoice;
+import com.backtracking.MrDinner.global.voice.VoiceService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ServerErrorException;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
+import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -33,17 +28,40 @@ public class CartItemService {
     private final DinnerRepository dinnerRepository;
     private final StyleRepository styleRepository;
     private final UserRepository userRepository;
-
+    private final VoiceService voiceService;
     @Transactional
     public void createCartItem(CartItemCreateRequestDto requestDto, HttpSession session) throws IllegalAccessException {
         String id = (String) session.getAttribute("id");
         User user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
         Cart cart = cartRepository.findByUserId(user);
         if(cart == null){
-            throw new IllegalAccessException("장바구니 생성을 못하였습니다.");
+            throw new IllegalAccessException("장바구니가 없습니다.");
         }
         DinnerList dinner = dinnerRepository.findById(requestDto.getDinner()).orElseThrow(() -> new IllegalArgumentException("해당 디너가 없습니다."));
         StyleList style = styleRepository.findById(requestDto.getStyle()).orElseThrow(() -> new IllegalArgumentException("해당 스타일이 없습니다."));
+        Long price = dinner.getPrice() + style.getPrice();
+        cartItemRepository.save(requestDto.toEntity(cart, price, dinner, style));
+    }
+
+    @Transactional
+    public void createCartItemWithVoice(CartItemVoiceCreateRequestDto requestDto, HttpSession session) throws IOException, InterruptedException, IllegalAccessException {
+        MultipartFile audioFile = requestDto.getAudioFile();
+        String token = (String) session.getAttribute("token");
+
+        String id = (String) session.getAttribute("id");
+        User user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
+        Cart cart = cartRepository.findByUserId(user);
+        if(cart == null){
+            throw new IllegalAccessException("장바구니 생성을 못하였습니다.");
+        }
+        //System.out.println("token: "+token);
+        // 음성 변환
+        String voiceId = voiceService.generateId(audioFile, token);
+        Thread.sleep(2000);
+        DinnerStyleVoice dinnerStyle = voiceService.getMenu(voiceId, token);
+
+        DinnerList dinner = dinnerRepository.findById(dinnerStyle.getDinner()).orElseThrow(() -> new IllegalArgumentException("해당 디너가 없습니다."));
+        StyleList style = styleRepository.findById(dinnerStyle.getStyle()).orElseThrow(() -> new IllegalArgumentException("해당 스타일이 없습니다."));
         Long price = dinner.getPrice() + style.getPrice();
         cartItemRepository.save(requestDto.toEntity(cart, price, dinner, style));
     }
