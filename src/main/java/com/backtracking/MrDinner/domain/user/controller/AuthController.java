@@ -10,12 +10,10 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
@@ -56,9 +54,11 @@ public class AuthController {
     }
 
     @GetMapping("/login")
-    public ResponseEntity<LoginResponseDto> login(@RequestBody LoginRequestDto requestDto, HttpSession session){
+    public ResponseEntity<LoginResponseDto> login(@RequestHeader Map<String, String> params, HttpSession session){
         DtoMetaData dtoMetaData;
-
+        System.out.println(params.keySet());
+        System.out.println(params.values());
+        LoginRequestDto requestDto = new LoginRequestDto(params.get("id"), params.get("password"));
         try{
             authService.login(requestDto, session);
             dtoMetaData = new DtoMetaData("로그인 성공");

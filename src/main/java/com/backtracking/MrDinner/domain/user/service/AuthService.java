@@ -35,6 +35,7 @@ public class AuthService {
         if(session.getAttribute("id") != null){
             session.removeAttribute("id");
         }
+        System.out.println(requestDto.getId());
         User user = userRepository.findById(requestDto.getId()).orElseThrow(() -> new IllegalArgumentException("해당 아이디가 존재하지 않습니다."));
 
         if(!user.getPassword().equals(requestDto.getPassword())){
