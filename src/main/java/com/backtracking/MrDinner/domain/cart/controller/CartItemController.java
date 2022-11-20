@@ -35,6 +35,23 @@ public class CartItemController {
         }
     }
 
+    @PostMapping
+    @RequestMapping("/voice")
+    public ResponseEntity<CartItemVoiceCreateResponseDto> createCartItemWithVoice(CartItemVoiceCreateRequestDto requestDto, HttpSession session){
+        DtoMetaData dtoMetaData;
+
+        try{
+            cartItemService.createCartItemWithVoice(requestDto, session);
+            dtoMetaData = new DtoMetaData("장바구니 중 단일 주문 생성 성공");
+            return ResponseEntity.ok(new CartItemVoiceCreateResponseDto(dtoMetaData));
+        }
+        catch (Exception e){
+            dtoMetaData = new DtoMetaData(e.getMessage(), e.getClass().getName());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new CartItemVoiceCreateResponseDto(dtoMetaData));
+        }
+    }
+
+
     @GetMapping
     public ResponseEntity<CartItemFetchResponseDto> fetchCartItem(@RequestBody CartItemFetchRequestDto requestDto, HttpSession session){
         DtoMetaData dtoMetaData;
