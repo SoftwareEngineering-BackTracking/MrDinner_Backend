@@ -13,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @Controller
 @RequestMapping("/api/recover")
 @RequiredArgsConstructor
@@ -21,9 +23,9 @@ public class UserRecoveryController {
     private final UserRecoveryService userRecoveryService;
 
     @GetMapping("/id")
-    public ResponseEntity<IdRecoveryResponseDto> recoverId(@RequestBody IdRecoveryRequestDto requestDto){
+    public ResponseEntity<IdRecoveryResponseDto> recoverId(@RequestHeader Map<String, String> params){
         DtoMetaData dtoMetaData;
-
+        IdRecoveryRequestDto requestDto = new IdRecoveryRequestDto(params.get("email"));
         try{
             String id = userRecoveryService.recoverId(requestDto);
             dtoMetaData = new DtoMetaData("아이디 찾기 완료");

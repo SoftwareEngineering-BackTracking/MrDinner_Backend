@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
@@ -35,9 +36,9 @@ public class DinnerIngredientController {
     }
 
     @GetMapping
-    public ResponseEntity<DinnerIngredientFetchResponseDto> fetchDinnerIngredient(@RequestBody DinnerIngredientFetchRequestDto requestDto){
+    public ResponseEntity<DinnerIngredientFetchResponseDto> fetchDinnerIngredient(@RequestHeader Map<String, Object> params){
         DtoMetaData dtoMetaData;
-
+        DinnerIngredientFetchRequestDto requestDto = new DinnerIngredientFetchRequestDto((DinnerIngredient) params.get("dinnerIngredient"));
         try{
             if(requestDto.getDinnerIngredient() == null){
                 List<DinnerIngredientList> dinnerIngredientList = dinnerIngredientService.fetchDinnerAllIngredient(requestDto);

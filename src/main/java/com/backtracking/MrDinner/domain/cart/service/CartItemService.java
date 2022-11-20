@@ -67,7 +67,7 @@ public class CartItemService {
     }
 
     @Transactional
-    public List<CartItem> fetchCartItem(CartItemFetchRequestDto requestDto, HttpSession session) {
+    public List<CartItem> fetchCartItem(HttpSession session) {
         String id = (String) session.getAttribute("id");
         User user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
         Cart cart = cartRepository.findByUserId(user);

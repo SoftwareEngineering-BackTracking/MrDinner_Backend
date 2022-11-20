@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/api/cartdetail")
@@ -38,9 +39,9 @@ public class CartDetailController {
     }
 
     @GetMapping
-    public ResponseEntity<CartDetailFetchResponseDto> fetchCartDetail(@RequestBody CartDetailFetchRequestDto requestDto){
+    public ResponseEntity<CartDetailFetchResponseDto> fetchCartDetail(@RequestHeader Map<String, Long> params){
         DtoMetaData dtoMetaData;
-
+        CartDetailFetchRequestDto requestDto = new CartDetailFetchRequestDto((Long) params.get("cartItemNo"));
         try{
             List<CartDetail> cartDetailList = cartDetailService.fetchCartDetail(requestDto);
             dtoMetaData = new DtoMetaData("주문 세부사항 조회 성공");

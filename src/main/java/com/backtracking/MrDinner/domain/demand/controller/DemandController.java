@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
@@ -36,9 +37,9 @@ public class DemandController {
     }
 
     @GetMapping
-    public ResponseEntity<DemandFetchResponseDto> fetchDemand(@RequestBody DemandFetchRequestDto requestDto, HttpSession session){
+    public ResponseEntity<DemandFetchResponseDto> fetchDemand(@RequestHeader Map<String, String> params, HttpSession session){
         DtoMetaData dtoMetaData;
-
+        DemandFetchRequestDto requestDto = new DemandFetchRequestDto(params.get("filter"));
         try{
             if(requestDto.getFilter() == null){
                 List<Demand> demandList = demandService.fetchAllDemand(requestDto);
