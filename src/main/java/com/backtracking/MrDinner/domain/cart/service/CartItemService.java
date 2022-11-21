@@ -25,6 +25,7 @@ public class CartItemService {
 
     private final CartRepository cartRepository;
     private final CartItemRepository cartItemRepository;
+    private final CartDetailRepository cartDetailRepository;
     private final DinnerRepository dinnerRepository;
     private final StyleRepository styleRepository;
     private final UserRepository userRepository;
@@ -87,6 +88,7 @@ public class CartItemService {
     @Transactional
     public void deleteCartItem(CartItemDeleteRequestDto requestDto) {
         CartItem cartItem = cartItemRepository.findById(requestDto.getCartItemNo()).orElseThrow(() -> new IllegalArgumentException("해당 주문이 없습니다."));
+        cartDetailRepository.deleteAllByCartItemNo(cartItem);;
 
         cartItemRepository.delete(cartItem);
     }

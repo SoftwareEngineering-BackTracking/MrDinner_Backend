@@ -84,7 +84,7 @@ public class CartDetailService {
 
     @Transactional
     public void deleteCartDetail(CartDetailDeleteRequestDto requestDto) {
-        CartItem cartItem = cartItemRepository.findById(requestDto.getCartItemNo()).orElseThrow(() -> new IllegalArgumentException("해당 주문이 없습니다."));
+        CartItem cartItem = cartItemRepository.findById(requestDto.getCartDetailNo()).orElseThrow(() -> new IllegalArgumentException("해당 주문이 없습니다."));
         List<CartDetail> cartDetails = cartDetailRepository.findByCartItemNo(cartItem);
         if(cartDetails.isEmpty()){
             throw new IllegalArgumentException("세부사항이 없습니다.");
