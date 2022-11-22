@@ -18,9 +18,8 @@ public class DinnerIngredientList {
     @Column
     private DinnerIngredient dinnerIngredient;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn
-    @JsonIgnore
     private DinnerList dinner;
 
     @Column

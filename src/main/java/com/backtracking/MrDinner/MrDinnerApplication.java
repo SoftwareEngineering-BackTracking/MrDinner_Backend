@@ -15,8 +15,8 @@ public class MrDinnerApplication {
 		SpringApplication.run(MrDinnerApplication.class, args);
 	}
 
-	@Bean
-	Hibernate5Module hibernate5Module(){
-		return new Hibernate5Module();
-	}
+	//@Bean
+	//Hibernate5Module hibernate5Module(){
+	//	return new Hibernate5Module();
+	//}
 }

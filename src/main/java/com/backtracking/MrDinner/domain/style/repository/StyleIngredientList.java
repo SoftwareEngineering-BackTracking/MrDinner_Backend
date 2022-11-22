@@ -19,9 +19,8 @@ public class StyleIngredientList {
     @Column
     private StyleIngredient styleIngredient;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn
-    @JsonIgnore
     private StyleList style;
 
     @Column
