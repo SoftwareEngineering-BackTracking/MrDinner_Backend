@@ -58,7 +58,7 @@ public class AuthController {
     public ResponseEntity<LoginResponseDto> login(@RequestHeader Map<String, String> params, HttpSession session){
         DtoMetaData dtoMetaData;
         HttpHeaders header = new HttpHeaders();
-        header.set("SameSite", "None");
+        header.set("sameSite", "None");
         LoginRequestDto requestDto = new LoginRequestDto(params.get("id"), params.get("password"));
         try{
             authService.login(requestDto, session);
