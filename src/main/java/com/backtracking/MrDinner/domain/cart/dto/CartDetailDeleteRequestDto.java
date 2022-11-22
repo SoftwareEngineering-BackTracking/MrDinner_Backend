@@ -4,5 +4,5 @@ import lombok.Data;
 
 @Data
 public class CartDetailDeleteRequestDto {
-    private Long cartItemNo;
+    private Long cartDetailNo;
 }
