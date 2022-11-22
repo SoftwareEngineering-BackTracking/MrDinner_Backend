@@ -25,6 +25,9 @@ public class User extends BaseEntity {
     private String name;
 
     @Column
+    private String birth;
+
+    @Column
     private String phoneNumber;
 
     @Column
@@ -41,18 +44,20 @@ public class User extends BaseEntity {
 //    private String address;
 
     @Builder
-    public User(String id, String password, String name, String phoneNumber, String email, String nickname, Department department){
+    public User(String id, String password, String name, String birth, String phoneNumber, String email, String nickname, Department department){
         this.id = id;
         this.password = password;
         this.name = name;
+        this.birth = birth;
         this.phoneNumber = phoneNumber;
         this.email = email;
         this.nickname = nickname;
         this.department =department;
     }
 
-    public void update(String name, String phoneNumber, String email, String nickname){
+    public void update(String name, String birth, String phoneNumber, String email, String nickname){
         this.name = name;
+        this.birth = birth;
         this.phoneNumber = phoneNumber;
         this.email = email;
         this.nickname = nickname;

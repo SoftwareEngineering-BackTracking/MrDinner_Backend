@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/api/cartitem")
@@ -35,12 +36,28 @@ public class CartItemController {
         }
     }
 
-    @GetMapping
-    public ResponseEntity<CartItemFetchResponseDto> fetchCartItem(@RequestBody CartItemFetchRequestDto requestDto, HttpSession session){
+    @PostMapping
+    @RequestMapping("/voice")
+    public ResponseEntity<CartItemVoiceCreateResponseDto> createCartItemWithVoice(CartItemVoiceCreateRequestDto requestDto, HttpSession session){
         DtoMetaData dtoMetaData;
 
         try{
-            List<CartItem> cartItemList = cartItemService.fetchCartItem(requestDto, session);
+            cartItemService.createCartItemWithVoice(requestDto, session);
+            dtoMetaData = new DtoMetaData("장바구니 중 단일 주문 생성 성공");
+            return ResponseEntity.ok(new CartItemVoiceCreateResponseDto(dtoMetaData));
+        }
+        catch (Exception e){
+            dtoMetaData = new DtoMetaData(e.getMessage(), e.getClass().getName());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new CartItemVoiceCreateResponseDto(dtoMetaData));
+        }
+    }
+
+
+    @GetMapping
+    public ResponseEntity<CartItemFetchResponseDto> fetchCartItem(HttpSession session){
+        DtoMetaData dtoMetaData;
+        try{
+            List<CartItem> cartItemList = cartItemService.fetchCartItem(session);
             dtoMetaData = new DtoMetaData("장바구니에 담긴 모든 주문 조회 성공");
             return ResponseEntity.ok(new CartItemFetchResponseDto(dtoMetaData, cartItemList));
         }

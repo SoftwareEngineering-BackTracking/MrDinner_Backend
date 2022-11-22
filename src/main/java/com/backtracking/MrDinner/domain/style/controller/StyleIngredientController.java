@@ -4,6 +4,7 @@ import com.backtracking.MrDinner.domain.style.dto.*;
 import com.backtracking.MrDinner.domain.style.repository.StyleIngredientList;
 import com.backtracking.MrDinner.domain.style.service.StyleIngredientService;
 import com.backtracking.MrDinner.global.dto.DtoMetaData;
+import com.backtracking.MrDinner.global.enumpackage.StyleIngredient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/api/styleingredient")
@@ -35,9 +37,9 @@ public class StyleIngredientController {
     }
 
     @GetMapping
-    public ResponseEntity<StyleIngredientFetchResponseDto> fetchStyleIngredient(@RequestBody StyleIngredientFetchRequestDto requestDto){
+    public ResponseEntity<StyleIngredientFetchResponseDto> fetchStyleIngredient(@RequestHeader Map<String, Object> params){
         DtoMetaData dtoMetaData;
-
+        StyleIngredientFetchRequestDto requestDto = new StyleIngredientFetchRequestDto((StyleIngredient) params.get("styleIngredient"));
         try{
             if(requestDto.getStyleIngredient() == null){
                 List<StyleIngredientList> StyleIngredientList = styleIngredientService.fetchAllStyleIngredient(requestDto);

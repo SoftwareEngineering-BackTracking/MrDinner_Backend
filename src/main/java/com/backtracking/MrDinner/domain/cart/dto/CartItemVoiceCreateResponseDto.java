@@ -1,4 +1,4 @@
-package com.backtracking.MrDinner.domain.user.dto;
+package com.backtracking.MrDinner.domain.cart.dto;
 
 import com.backtracking.MrDinner.global.dto.DtoMetaData;
 import lombok.AllArgsConstructor;
@@ -6,6 +6,6 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class CheckIdRequestDto {
-    private String id;
+public class CartItemVoiceCreateResponseDto {
+    private DtoMetaData dtoMetaData;
 }

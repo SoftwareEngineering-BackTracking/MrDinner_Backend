@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/api/purchase")
@@ -37,13 +38,20 @@ public class PurchaseController {
     }
 
     @GetMapping
-    public ResponseEntity<PurchaseFetchResponseDto> fetchPurchase(@RequestBody PurchaseFetchRequestDto requestDto, HttpSession session){
+    public ResponseEntity<PurchaseFetchResponseDto> fetchPurchase(@RequestHeader Map<String, Long> params, HttpSession session){
         DtoMetaData dtoMetaData;
-
+        PurchaseFetchRequestDto requestDto = new PurchaseFetchRequestDto(params.get("purchaseNo"));
         try{
-            List<Purchase> PurchaseList = purchaseService.fetchPurchase(requestDto, session);
-            dtoMetaData = new DtoMetaData("나의 결제 정보 조회 완료");
-            return ResponseEntity.ok(new PurchaseFetchResponseDto(dtoMetaData, PurchaseList));
+            if(requestDto.getPurchaseNo() == null){
+                List<Purchase> PurchaseList = purchaseService.fetchMyPurchase(requestDto, session);
+                dtoMetaData = new DtoMetaData("나의 결제 정보 조회 완료");
+                return ResponseEntity.ok(new PurchaseFetchResponseDto(dtoMetaData, PurchaseList));
+            }
+            else{
+                List<Purchase> PurchaseList = purchaseService.fetchPurchase(requestDto, session);
+                dtoMetaData = new DtoMetaData("특정 결제 정보 조회 완료");
+                return ResponseEntity.ok(new PurchaseFetchResponseDto(dtoMetaData, PurchaseList));
+            }
         }
         catch (Exception e){
             dtoMetaData= new DtoMetaData(e.getMessage(), e.getClass().getName());

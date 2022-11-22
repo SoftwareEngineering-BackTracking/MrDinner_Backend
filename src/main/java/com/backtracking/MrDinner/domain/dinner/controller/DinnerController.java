@@ -5,15 +5,18 @@ import com.backtracking.MrDinner.domain.dinner.dto.DinnerFetchResponseDto;
 import com.backtracking.MrDinner.domain.dinner.repository.DinnerList;
 import com.backtracking.MrDinner.domain.dinner.service.DinnerService;
 import com.backtracking.MrDinner.global.dto.DtoMetaData;
+import com.backtracking.MrDinner.global.enumpackage.Dinner;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
@@ -21,9 +24,9 @@ import java.util.List;
 public class DinnerController {
     private final DinnerService dinnerService;
     @GetMapping
-    public ResponseEntity<DinnerFetchResponseDto> fetchDinner(@RequestBody DinnerFetchRequestDto requestDto){
+    public ResponseEntity<DinnerFetchResponseDto> fetchDinner(@RequestHeader Map<String, Object> params){
         DtoMetaData dtoMetaData;
-
+        DinnerFetchRequestDto requestDto = new DinnerFetchRequestDto((Dinner) params.get("dinner"));
         try{
             if(requestDto.getDinner() == null){
                 List<DinnerList> dinnerList = dinnerService.fetchAllDinner(requestDto);
