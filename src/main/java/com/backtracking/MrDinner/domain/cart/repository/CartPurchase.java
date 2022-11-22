@@ -18,7 +18,7 @@ public class CartPurchase {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long cartPurchaseNo;
 
-    @ManyToOne(fetch=FetchType.LAZY)
+    @ManyToOne(fetch=FetchType.EAGER)
     @JoinColumn
     private Cart cartNo;
 
@@ -28,7 +28,7 @@ public class CartPurchase {
     @Column
     private String bank;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn
     private Purchase purchase;
 }
