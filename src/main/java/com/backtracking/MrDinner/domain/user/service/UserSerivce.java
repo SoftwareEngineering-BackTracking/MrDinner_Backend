@@ -25,6 +25,7 @@ import java.util.List;
 public class UserSerivce {
     private Department department;
     private final UserRepository userRepository;
+    private final CartRepository cartRepository;
     private final CartService cartService;
     // 회원가입
     @Transactional
@@ -34,7 +35,9 @@ public class UserSerivce {
             throw new IllegalArgumentException("이미 가입되어 있는 유저입니다. ID: " + id);
         }
         userRepository.save(requestDto.toEntity());
-        cartService.createCart(requestDto.getId());
+        if(!cartRepository.existsByUserId(requestDto.getId())){
+            cartService.createCart(requestDto.getId());
+        }
     }
 
     // 내 정보 보기
