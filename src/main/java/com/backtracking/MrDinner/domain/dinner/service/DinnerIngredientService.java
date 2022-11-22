@@ -33,6 +33,9 @@ public class DinnerIngredientService {
     public List<DinnerIngredientList> fetchDinnerAllIngredient(DinnerIngredientFetchRequestDto requestDto) {
         List<DinnerIngredientList> dinnerIngredientLists = dinnerIngredientRepository.findAll();
 
+        for (DinnerIngredientList dinnerIngredientList : dinnerIngredientLists){
+            dinnerIngredientList.getDinner().getDinner();
+        }
         if(dinnerIngredientLists.isEmpty()){
             throw new IllegalArgumentException("디너 세부 재료가 없습니다.");
         }
