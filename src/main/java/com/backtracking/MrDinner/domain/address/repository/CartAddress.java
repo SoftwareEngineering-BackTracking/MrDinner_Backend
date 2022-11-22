@@ -18,11 +18,11 @@ public class CartAddress {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long CartAddressNo;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn
     private Address address;
 
-    @ManyToOne(fetch=FetchType.LAZY)
+    @ManyToOne(fetch=FetchType.EAGER)
     @JoinColumn(unique = true)
     private Cart cartNo;
 

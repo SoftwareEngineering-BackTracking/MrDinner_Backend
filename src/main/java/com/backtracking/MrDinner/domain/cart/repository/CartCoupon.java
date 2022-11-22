@@ -18,7 +18,7 @@ public class CartCoupon {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long cartCouponNo;
 
-    @ManyToOne(fetch=FetchType.LAZY)
+    @ManyToOne(fetch=FetchType.EAGER)
     @JoinColumn
     private Cart cartNo;
 
@@ -34,7 +34,7 @@ public class CartCoupon {
     @Column
     private String name;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn
     private Coupon coupon;
 }
