@@ -14,7 +14,7 @@ public class WebConfig implements WebMvcConfigurer {
     public void addCorsMappings(CorsRegistry corsRegistry){
         corsRegistry.addMapping("/**")
                 .allowedOrigins("*")
-                .allowedHeaders("*")
+                .allowedHeaders("http://127.0.0.1:5500")
                 .allowCredentials(true)
                 .allowedMethods(ALLOWED_METHOD_NAMES.split(","));
 
