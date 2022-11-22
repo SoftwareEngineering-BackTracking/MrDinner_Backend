@@ -2,6 +2,7 @@ package com.backtracking.MrDinner.domain.style.repository;
 
 import com.backtracking.MrDinner.global.enumpackage.Style;
 import com.backtracking.MrDinner.global.enumpackage.StyleIngredient;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,8 +19,9 @@ public class StyleIngredientList {
     @Column
     private StyleIngredient styleIngredient;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn
+    @JsonIgnore
     private StyleList style;
 
     @Column

@@ -2,6 +2,7 @@ package com.backtracking.MrDinner.domain.dinner.repository;
 
 import com.backtracking.MrDinner.global.enumpackage.Dinner;
 import com.backtracking.MrDinner.global.enumpackage.DinnerIngredient;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,8 +18,9 @@ public class DinnerIngredientList {
     @Column
     private DinnerIngredient dinnerIngredient;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn
+    @JsonIgnore
     private DinnerList dinner;
 
     @Column
