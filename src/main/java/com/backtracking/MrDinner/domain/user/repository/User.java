@@ -16,6 +16,7 @@ import javax.persistence.*;
 public class User extends BaseEntity {
 
     @Id
+    @Column
     private String id;
 
     @Column
