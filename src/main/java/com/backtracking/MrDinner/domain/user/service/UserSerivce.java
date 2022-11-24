@@ -30,9 +30,9 @@ public class UserSerivce {
     // 회원가입
     @Transactional
     public void createUser(UserCreateRequestDto requestDto) {
-        String id = requestDto.getEmail();
-        if(userRepository.existsById(id)){
-            throw new IllegalArgumentException("이미 가입되어 있는 유저입니다. ID: " + id);
+        String email = requestDto.getEmail();
+        if(userRepository.existsByEmail(email)){
+            throw new IllegalArgumentException("이미 가입되어 있는 유저입니다. EMAIL: " + email);
         }
         userRepository.save(requestDto.toEntity());
         if(!cartRepository.existsByUserId(requestDto.getId())){
