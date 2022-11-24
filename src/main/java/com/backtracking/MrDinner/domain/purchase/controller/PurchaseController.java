@@ -23,11 +23,11 @@ public class PurchaseController {
     private final PurchaseService purchaseService;
 
     @PostMapping
-    public ResponseEntity<PurchaseCreateResponseDto> createPurchase(@RequestBody PurchaseCreateRequestDto requestDto, HttpSession session){
+    public ResponseEntity<PurchaseCreateResponseDto> createPurchase(@RequestBody PurchaseCreateRequestDto requestDto){
         DtoMetaData dtoMetaData;
 
         try{
-            purchaseService.createPurchase(requestDto, session);
+            purchaseService.createPurchase(requestDto);
             dtoMetaData = new DtoMetaData("결제 정보 생성 완료");
             return ResponseEntity.ok(new PurchaseCreateResponseDto(dtoMetaData));
         }
@@ -38,17 +38,17 @@ public class PurchaseController {
     }
 
     @GetMapping
-    public ResponseEntity<PurchaseFetchResponseDto> fetchPurchase(@RequestHeader Map<String, Long> params, HttpSession session){
+    public ResponseEntity<PurchaseFetchResponseDto> fetchPurchase(@RequestHeader Map<String, Object> params){
         DtoMetaData dtoMetaData;
-        PurchaseFetchRequestDto requestDto = new PurchaseFetchRequestDto(params.get("purchaseNo"));
+        PurchaseFetchRequestDto requestDto = new PurchaseFetchRequestDto((String) params.get("id"), (Long) params.get("purchaseNo"));
         try{
             if(requestDto.getPurchaseNo() == null){
-                List<Purchase> PurchaseList = purchaseService.fetchMyPurchase(requestDto, session);
+                List<Purchase> PurchaseList = purchaseService.fetchMyPurchase(requestDto);
                 dtoMetaData = new DtoMetaData("나의 결제 정보 조회 완료");
                 return ResponseEntity.ok(new PurchaseFetchResponseDto(dtoMetaData, PurchaseList));
             }
             else{
-                List<Purchase> PurchaseList = purchaseService.fetchPurchase(requestDto, session);
+                List<Purchase> PurchaseList = purchaseService.fetchPurchase(requestDto);
                 dtoMetaData = new DtoMetaData("특정 결제 정보 조회 완료");
                 return ResponseEntity.ok(new PurchaseFetchResponseDto(dtoMetaData, PurchaseList));
             }
@@ -60,12 +60,12 @@ public class PurchaseController {
     }
 
     @DeleteMapping
-    public ResponseEntity<PurchaseDeleteResponseDto> deletePurchase(@RequestBody PurchaseDeleteRequestDto requestDto, HttpSession session){
+    public ResponseEntity<PurchaseDeleteResponseDto> deletePurchase(@RequestBody PurchaseDeleteRequestDto requestDto){
 
         DtoMetaData dtoMetaData;
 
         try{
-            purchaseService.deletePurchase(requestDto, session);
+            purchaseService.deletePurchase(requestDto);
             dtoMetaData = new DtoMetaData("결제 정보 삭제 완료");
             return ResponseEntity.ok(new PurchaseDeleteResponseDto(dtoMetaData));
         }

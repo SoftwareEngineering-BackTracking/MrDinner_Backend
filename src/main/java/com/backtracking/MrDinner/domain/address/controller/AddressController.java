@@ -23,11 +23,11 @@ public class AddressController {
     private final AddressService addressService;
 
     @PostMapping
-    public ResponseEntity<AddressCreateResponseDto> createAddress(@RequestBody AddressCreateRequestDto requestDto, HttpSession session){
+    public ResponseEntity<AddressCreateResponseDto> createAddress(@RequestBody AddressCreateRequestDto requestDto){
         DtoMetaData dtoMetaData;
 
         try{
-            addressService.createAddress(requestDto, session);
+            addressService.createAddress(requestDto);
             dtoMetaData = new DtoMetaData("주소 설정 완료");
             return ResponseEntity.ok(new AddressCreateResponseDto(dtoMetaData));
         }
@@ -38,12 +38,12 @@ public class AddressController {
     }
 
     @GetMapping
-    public ResponseEntity<AddressFetchResponseDto> fetchAddress(@RequestHeader Map<String, Long> params, HttpSession session){
+    public ResponseEntity<AddressFetchResponseDto> fetchAddress(@RequestHeader Map<String, Object> params){
         DtoMetaData dtoMetaData;
-        AddressFetchRequestDto requestDto = new AddressFetchRequestDto(params.get("addressNo"));
+        AddressFetchRequestDto requestDto = new AddressFetchRequestDto((String) params.get("id"), (Long) params.get("addressNo"));
         try{
             if(requestDto.getAddressNo() == null){
-                List<Address> addressList = addressService.fetchMyAddress(requestDto, session);
+                List<Address> addressList = addressService.fetchMyAddress(requestDto);
                 dtoMetaData = new DtoMetaData("나의 주소 조회 완료");
                 return ResponseEntity.ok(new AddressFetchResponseDto(dtoMetaData, addressList));
             }
@@ -61,11 +61,11 @@ public class AddressController {
     }
 
     @PutMapping
-    public ResponseEntity<AddressUpdateResponseDto> updateAddress(@RequestBody AddressUpdateRequestDto requestDto, HttpSession session){
+    public ResponseEntity<AddressUpdateResponseDto> updateAddress(@RequestBody AddressUpdateRequestDto requestDto){
         DtoMetaData dtoMetaData;
 
         try{
-            addressService.updateAddress(requestDto, session);
+            addressService.updateAddress(requestDto);
             dtoMetaData = new DtoMetaData("주소 수정 완료");
             return ResponseEntity.ok(new AddressUpdateResponseDto(dtoMetaData));
         }
@@ -76,12 +76,12 @@ public class AddressController {
     }
 
     @DeleteMapping
-    public ResponseEntity<AddressDeleteResponseDto> deleteAddress(@RequestBody AddressDeleteRequestDto requestDto, HttpSession session){
+    public ResponseEntity<AddressDeleteResponseDto> deleteAddress(@RequestBody AddressDeleteRequestDto requestDto){
 
         DtoMetaData dtoMetaData;
 
         try{
-            addressService.deleteAddress(requestDto, session);
+            addressService.deleteAddress(requestDto);
             dtoMetaData = new DtoMetaData("주소 삭제 완료");
             return ResponseEntity.ok(new AddressDeleteResponseDto(dtoMetaData));
         }

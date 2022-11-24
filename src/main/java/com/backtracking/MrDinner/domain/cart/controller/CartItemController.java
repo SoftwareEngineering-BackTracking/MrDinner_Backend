@@ -22,11 +22,11 @@ public class CartItemController {
     private final CartItemService cartItemService;
 
     @PostMapping
-    public ResponseEntity<CartItemCreateResponseDto> createCartItem(@RequestBody CartItemCreateRequestDto requestDto, HttpSession session){
+    public ResponseEntity<CartItemCreateResponseDto> createCartItem(@RequestBody CartItemCreateRequestDto requestDto){
         DtoMetaData dtoMetaData;
 
         try{
-            cartItemService.createCartItem(requestDto, session);
+            cartItemService.createCartItem(requestDto);
             dtoMetaData = new DtoMetaData("장바구니 중 단일 주문 생성 성공");
             return ResponseEntity.ok(new CartItemCreateResponseDto(dtoMetaData));
         }
@@ -54,10 +54,10 @@ public class CartItemController {
 
 
     @GetMapping
-    public ResponseEntity<CartItemFetchResponseDto> fetchCartItem(HttpSession session){
+    public ResponseEntity<CartItemFetchResponseDto> fetchCartItem(CartItemFetchRequestDto requestDto){
         DtoMetaData dtoMetaData;
         try{
-            List<CartItem> cartItemList = cartItemService.fetchCartItem(session);
+            List<CartItem> cartItemList = cartItemService.fetchCartItem(requestDto);
             dtoMetaData = new DtoMetaData("장바구니에 담긴 모든 주문 조회 성공");
             return ResponseEntity.ok(new CartItemFetchResponseDto(dtoMetaData, cartItemList));
         }

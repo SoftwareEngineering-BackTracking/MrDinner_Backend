@@ -31,9 +31,9 @@ public class CartItemService {
     private final UserRepository userRepository;
     private final VoiceService voiceService;
     @Transactional
-    public void createCartItem(CartItemCreateRequestDto requestDto, HttpSession session) throws IllegalAccessException {
-        String id = (String) session.getAttribute("id");
-        User user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
+    public void createCartItem(CartItemCreateRequestDto requestDto) throws IllegalAccessException {
+        //String id = (String) session.getAttribute("id");
+        User user = userRepository.findById(requestDto.getId()).orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
         Cart cart = cartRepository.findByUserId(user);
         if(cart == null){
             throw new IllegalAccessException("장바구니가 없습니다.");
@@ -49,8 +49,8 @@ public class CartItemService {
         MultipartFile audioFile = requestDto.getAudioFile();
         String token = (String) session.getAttribute("token");
 
-        String id = (String) session.getAttribute("id");
-        User user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
+        //String id = (String) session.getAttribute("id");
+        User user = userRepository.findById(requestDto.getId()).orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
         Cart cart = cartRepository.findByUserId(user);
         if(cart == null){
             throw new IllegalAccessException("장바구니 생성을 못하였습니다.");
@@ -68,9 +68,9 @@ public class CartItemService {
     }
 
     @Transactional
-    public List<CartItem> fetchCartItem(HttpSession session) {
-        String id = (String) session.getAttribute("id");
-        User user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
+    public List<CartItem> fetchCartItem(CartItemFetchRequestDto requestDto) {
+        //String id = (String) session.getAttribute("id");
+        User user = userRepository.findById(requestDto.getId()).orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
         Cart cart = cartRepository.findByUserId(user);
         List<CartItem> cartItems = cartItemRepository.findByCartNo(cart);
         return cartItems;

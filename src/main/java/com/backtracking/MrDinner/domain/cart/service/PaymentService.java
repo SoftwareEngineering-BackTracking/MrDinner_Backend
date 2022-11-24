@@ -23,9 +23,9 @@ public class PaymentService {
     private final CartPurchaseRepository cartPurchaseRepository;
     private final CartRepository cartRepository;
     private final UserRepository userRepository;
-    public void payCart(PaymentRequestDto requestDto, HttpSession session) {
-        String id = (String) session.getAttribute("id");
-        User user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
+    public void payCart(PaymentRequestDto requestDto) {
+        //String id = (String) session.getAttribute("id");
+        User user = userRepository.findById(requestDto.getId()).orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
         Cart cart = cartRepository.findByUserId(user);
 
         if(requestDto.getCouponNo() != null) {

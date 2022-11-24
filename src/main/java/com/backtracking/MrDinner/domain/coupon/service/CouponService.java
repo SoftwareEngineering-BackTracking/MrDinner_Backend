@@ -25,16 +25,16 @@ public class CouponService {
     
     // 테스트를 위한 임시 생성
     @Transactional
-    public void createCoupon(CouponCreateRequestDto requestDto, HttpSession session) {
-        String id = (String) session.getAttribute("id");
-        User user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
+    public void createCoupon(CouponCreateRequestDto requestDto) {
+        //String id = (String) session.getAttribute("id");
+        User user = userRepository.findById(requestDto.getId()).orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
         couponRepository.save(requestDto.toEntity(user));
     }
 
     @Transactional
-    public List<Coupon> fetchMyCoupon(CouponFetchRequestDto requestDto, HttpSession session) {
-        String id = (String) session.getAttribute("id");
-        User user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
+    public List<Coupon> fetchMyCoupon(CouponFetchRequestDto requestDto) {
+        //String id = (String) session.getAttribute("id");
+        User user = userRepository.findById(requestDto.getId()).orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
         List<Coupon> couponList = couponRepository.findAllByUserId(user);
 
         if(couponList.isEmpty()){

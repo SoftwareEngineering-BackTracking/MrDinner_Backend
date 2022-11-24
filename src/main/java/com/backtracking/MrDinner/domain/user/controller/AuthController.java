@@ -57,16 +57,11 @@ public class AuthController {
     @GetMapping("/login")
     public ResponseEntity<LoginResponseDto> login(@RequestHeader Map<String, String> params, HttpSession session){
         DtoMetaData dtoMetaData;
-        HttpHeaders header = new HttpHeaders();
-        header.set("sameSite", "None");
         LoginRequestDto requestDto = new LoginRequestDto(params.get("id"), params.get("password"));
         try{
             authService.login(requestDto, session);
             dtoMetaData = new DtoMetaData("로그인 성공");
-//            return ResponseEntity.ok(new LoginResponseDto(dtoMetaData));
-            return ResponseEntity.ok()
-                    .headers(header)
-                    .body(new LoginResponseDto(dtoMetaData));
+            return ResponseEntity.ok(new LoginResponseDto(dtoMetaData));
         }
         catch (Exception e){
             dtoMetaData = new DtoMetaData(e.getMessage(), e.getClass().getName());
@@ -75,11 +70,11 @@ public class AuthController {
     }
 
     @GetMapping("/logout")
-    public ResponseEntity<LogoutResponseDto> logout(HttpSession session){
+    public ResponseEntity<LogoutResponseDto> logout(){
         DtoMetaData dtoMetaData;
 
         try{
-            authService.logout(session);
+            //authService.logout();
             dtoMetaData = new DtoMetaData("로그아웃 성공");
             return ResponseEntity.ok(new LogoutResponseDto(dtoMetaData));
         }

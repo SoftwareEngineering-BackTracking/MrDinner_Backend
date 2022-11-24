@@ -23,17 +23,17 @@ public class PurchaseService {
     private final PurchaseRepository purchaseRepository;
     private final UserRepository userRepository;
     @Transactional
-    public void createPurchase(PurchaseCreateRequestDto requestDto, HttpSession session) {
-        String id = (String) session.getAttribute("id");
-        User user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
+    public void createPurchase(PurchaseCreateRequestDto requestDto) {
+        //String id = (String) session.getAttribute("id");
+        User user = userRepository.findById(requestDto.getId()).orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
 
         purchaseRepository.save(requestDto.toEntity(user));
     }
 
     @Transactional
-    public List<Purchase> fetchMyPurchase(PurchaseFetchRequestDto requestDto, HttpSession session) {
-        String id = (String) session.getAttribute("id");
-        User user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
+    public List<Purchase> fetchMyPurchase(PurchaseFetchRequestDto requestDto) {
+        //String id = (String) session.getAttribute("id");
+        User user = userRepository.findById(requestDto.getId()).orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
         List<Purchase> purchaseList = purchaseRepository.findAllByUserId(user);
 
         if(purchaseList.isEmpty()){
@@ -43,9 +43,9 @@ public class PurchaseService {
     }
 
     @Transactional
-    public void deletePurchase(PurchaseDeleteRequestDto requestDto, HttpSession session) {
-        String id = (String) session.getAttribute("id");
-        User user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
+    public void deletePurchase(PurchaseDeleteRequestDto requestDto) {
+        //String id = (String) session.getAttribute("id");
+        User user = userRepository.findById(requestDto.getId()).orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
 
         Purchase purchase = purchaseRepository.findAllByPurchaseNoAndUserId(requestDto.getPurchaseNo(), user);
         if (purchase == null) {
@@ -55,7 +55,7 @@ public class PurchaseService {
     }
 
     @Transactional
-    public List<Purchase> fetchPurchase(PurchaseFetchRequestDto requestDto, HttpSession session) {
+    public List<Purchase> fetchPurchase(PurchaseFetchRequestDto requestDto) {
         Purchase purchase = purchaseRepository.findById(requestDto.getPurchaseNo()).orElseThrow(() -> new IllegalArgumentException("해당 결제 정보가 없습니다."));
 
         List<Purchase> purchaseList = new ArrayList<>();

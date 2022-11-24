@@ -4,5 +4,6 @@ import lombok.Data;
 
 @Data
 public class PurchaseDeleteRequestDto {
+    private String id;
     private Long purchaseNo;
 }

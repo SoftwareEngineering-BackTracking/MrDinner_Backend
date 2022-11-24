@@ -8,6 +8,7 @@ import java.util.Date;
 
 @Data
 public class CouponCreateRequestDto {
+    private String id;
     private Date startTime;
     private Date endTime;
     private String name;

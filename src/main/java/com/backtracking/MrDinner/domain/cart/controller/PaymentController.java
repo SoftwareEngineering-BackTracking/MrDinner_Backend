@@ -23,11 +23,11 @@ public class PaymentController {
 
     private final PaymentService paymentService;
     @PostMapping
-    public ResponseEntity<PaymentResponseDto> payCart(@RequestBody PaymentRequestDto requestDto, HttpSession session){
+    public ResponseEntity<PaymentResponseDto> payCart(@RequestBody PaymentRequestDto requestDto){
         DtoMetaData dtoMetaData;
 
         try{
-            paymentService.payCart(requestDto, session);
+            paymentService.payCart(requestDto);
             dtoMetaData = new DtoMetaData("결제 성공");
             return ResponseEntity.ok(new PaymentResponseDto(dtoMetaData));
         }
