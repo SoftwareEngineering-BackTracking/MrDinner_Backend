@@ -22,11 +22,11 @@ public class DemandController {
     private final DemandService demandService;
 
     @PostMapping
-    public ResponseEntity<DemandCreateResponseDto> createDemand(@RequestBody DemandCreateRequestDto requestDto, HttpSession session){
+    public ResponseEntity<DemandCreateResponseDto> createDemand(@RequestBody DemandCreateRequestDto requestDto){
         DtoMetaData dtoMetaData;
 
         try{
-            demandService.createDemand(requestDto, session);
+            demandService.createDemand(requestDto);
             dtoMetaData = new DtoMetaData("주문 생성 완료");
             return ResponseEntity.ok(new DemandCreateResponseDto(dtoMetaData));
         }
@@ -37,7 +37,7 @@ public class DemandController {
     }
 
     @GetMapping
-    public ResponseEntity<DemandFetchResponseDto> fetchDemand(@RequestHeader Map<String, String> params, HttpSession session){
+    public ResponseEntity<DemandFetchResponseDto> fetchDemand(@RequestHeader Map<String, String> params){
         DtoMetaData dtoMetaData;
         DemandFetchRequestDto requestDto = new DemandFetchRequestDto(params.get("filter"));
         try{
@@ -47,7 +47,7 @@ public class DemandController {
                 return ResponseEntity.ok(new DemandFetchResponseDto(dtoMetaData, demandList));
             }
             else {
-                OrderInfo orderInfo = demandService.fetchDemand(requestDto, session);
+                OrderInfo orderInfo = demandService.fetchDemand(requestDto);
                 dtoMetaData = new DtoMetaData("주문 조회 완료");
                 return ResponseEntity.ok(new DemandFetchResponseDto(dtoMetaData, orderInfo.getDemandList(), orderInfo.getDemandItemList(), orderInfo.getDemandDetailList()));
             }
@@ -59,11 +59,11 @@ public class DemandController {
     }
 
     @PutMapping
-    public ResponseEntity<DemandUpdateResponseDto> updateDemand(@RequestBody DemandUpdateRequestDto requestDto, HttpSession session){
+    public ResponseEntity<DemandUpdateResponseDto> updateDemand(@RequestBody DemandUpdateRequestDto requestDto){
         DtoMetaData dtoMetaData;
 
         try{
-            demandService.updateDemand(requestDto, session);
+            demandService.updateDemand(requestDto);
             dtoMetaData = new DtoMetaData("주문 수정 완료");
             return ResponseEntity.ok(new DemandUpdateResponseDto(dtoMetaData));
         }

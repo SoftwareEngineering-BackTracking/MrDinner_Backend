@@ -12,6 +12,7 @@ import lombok.Data;
 
 @Data
 public class CartItemCreateRequestDto {
+    private String id;
     private Dinner dinner;
     private Style style;
 

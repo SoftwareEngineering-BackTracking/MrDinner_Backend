@@ -9,5 +9,5 @@ import lombok.Data;
 
 @Data
 public class DemandCreateRequestDto {
-
+    private String id;
 }

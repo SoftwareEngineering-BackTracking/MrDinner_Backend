@@ -6,5 +6,6 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class PurchaseFetchRequestDto {
+    private String id;
     private Long purchaseNo;
 }

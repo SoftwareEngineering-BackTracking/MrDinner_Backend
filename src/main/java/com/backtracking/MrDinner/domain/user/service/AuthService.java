@@ -32,17 +32,17 @@ public class AuthService {
 
     @Transactional
     public void login(LoginRequestDto requestDto, HttpSession session) throws IOException, ParseException {
-        if(session.getAttribute("id") != null){
-            session.removeAttribute("id");
-        }
-        System.out.println(requestDto.getId());
+//        if(session.getAttribute("id") != null){
+//            session.removeAttribute("id");
+//        }
+//        System.out.println(requestDto.getId());
         User user = userRepository.findById(requestDto.getId()).orElseThrow(() -> new IllegalArgumentException("해당 아이디가 존재하지 않습니다."));
 
         if(!user.getPassword().equals(requestDto.getPassword())){
             throw new IllegalArgumentException("비밀번호가 틀립니다.");
         }
         // 세션에 id 정보 저장
-        session.setAttribute("id", requestDto.getId());
+//        session.setAttribute("id", requestDto.getId());
 
         // 음성인식 토큰 생성
         String token = voiceToken.generateToken();
@@ -58,11 +58,12 @@ public class AuthService {
 
 
     @Transactional
-    public void logout(HttpSession session) {
-        String id = (String) session.getAttribute("id");
-        if(id != null){
-            // 세션에 아이디 정보 삭제
-            session.invalidate();
-        }
+    public void logout() {
+//        String id = (String) session.getAttribute("id");
+//        if(id != null){
+//            // 세션에 아이디 정보 삭제
+//            session.invalidate();
+//        }
+
     }
 }

@@ -6,5 +6,6 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class CouponFetchRequestDto {
+    private String id;
     private Long couponNo;
 }

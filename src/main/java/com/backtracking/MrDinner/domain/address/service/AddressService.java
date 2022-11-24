@@ -29,9 +29,9 @@ public class AddressService {
     private final CartAddressRepository cartAddressRepository;
     private final UserRepository userRepository;
 
-    public void createAddress(AddressCreateRequestDto requestDto, HttpSession session) {
-        String id = (String) session.getAttribute("id");
-        User user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
+    public void createAddress(AddressCreateRequestDto requestDto) {
+        //String id = (String) session.getAttribute("id");
+        User user = userRepository.findById(requestDto.getId()).orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
         Cart cart = cartRepository.findByUserId(user);
         Address duplicateAddress = addressRepository.findByDetailAndUserId(requestDto.getDetail(), user);
 
@@ -60,9 +60,9 @@ public class AddressService {
     }
 
     @Transactional
-    public List<Address> fetchMyAddress(AddressFetchRequestDto requestDto, HttpSession session) {
-        String id = (String) session.getAttribute("id");
-        User user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
+    public List<Address> fetchMyAddress(AddressFetchRequestDto requestDto) {
+        //String id = (String) session.getAttribute("id");
+        User user = userRepository.findById(requestDto.getId()).orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
         List<Address> addressList = addressRepository.findAllByUserId(user);
 
         if(addressList.isEmpty()){
@@ -84,9 +84,9 @@ public class AddressService {
     }
 
     @Transactional
-    public void updateAddress(AddressUpdateRequestDto requestDto, HttpSession session) {
-        String id = (String) session.getAttribute("id");
-        User user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
+    public void updateAddress(AddressUpdateRequestDto requestDto) {
+        //String id = (String) session.getAttribute("id");
+        User user = userRepository.findById(requestDto.getId()).orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
         Address address = addressRepository.findAllByAddressNoAndUserId(requestDto.getAddressNo(), user);
         if (address == null) {
             throw new IllegalArgumentException("해당 주소가 없습니다.");
@@ -95,9 +95,9 @@ public class AddressService {
 
     }
     @Transactional
-    public void deleteAddress(AddressDeleteRequestDto requestDto, HttpSession session) {
-        String id = (String) session.getAttribute("id");
-        User user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
+    public void deleteAddress(AddressDeleteRequestDto requestDto) {
+        //String id = (String) session.getAttribute("id");
+        User user = userRepository.findById(requestDto.getId()).orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
         Address address= addressRepository.findAllByAddressNoAndUserId(requestDto.getAddressNo(), user);
         if (address == null) {
             throw new IllegalArgumentException("해당 주소가 없습니다.");

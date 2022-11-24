@@ -58,9 +58,9 @@ public class DemandService {
                 .build();
     }
 
-    public void createDemand(DemandCreateRequestDto requestDto, HttpSession session) {
-        String id = (String) session.getAttribute("id");
-        User user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
+    public void createDemand(DemandCreateRequestDto requestDto) {
+        //String id = (String) session.getAttribute("id");
+        User user = userRepository.findById(requestDto.getId()).orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
         Cart cart = cartRepository.findByUserId(user);
 
         // demand price, status, address, coupon, purchase 저장
@@ -189,9 +189,9 @@ public class DemandService {
     }
 
     @Transactional
-    public OrderInfo fetchDemand(DemandFetchRequestDto requestDto, HttpSession session) {
-        String id = (String) session.getAttribute("id");
-        User user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
+    public OrderInfo fetchDemand(DemandFetchRequestDto requestDto) {
+        //String id = (String) session.getAttribute("id");
+        User user = userRepository.findById(requestDto.getFilter()).orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
         List<Demand> demandList = demandRepository.findAllByUserId(user);
         List<List<DemandItem>> demandItemList = new ArrayList<>();
         List<List<DemandDetail>> demandDetailList = new ArrayList<>();
@@ -215,7 +215,7 @@ public class DemandService {
     }
 
     @Transactional
-    public void updateDemand(DemandUpdateRequestDto requestDto, HttpSession session) {
+    public void updateDemand(DemandUpdateRequestDto requestDto) {
         Demand demand = demandRepository.findById(requestDto.getDemandNo()).orElseThrow(() -> new IllegalArgumentException("주문 정보가 없습니다."));
 
         // price update

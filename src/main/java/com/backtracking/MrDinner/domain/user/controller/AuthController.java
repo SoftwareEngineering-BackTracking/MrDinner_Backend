@@ -64,7 +64,6 @@ public class AuthController {
             authService.login(requestDto, session);
             dtoMetaData = new DtoMetaData("로그인 성공");
             return ResponseEntity.ok(new LoginResponseDto(dtoMetaData));
-
         }
         catch (Exception e){
             dtoMetaData = new DtoMetaData(e.getMessage(), e.getClass().getName());
@@ -73,11 +72,11 @@ public class AuthController {
     }
 
     @GetMapping("/logout")
-    public ResponseEntity<LogoutResponseDto> logout(HttpSession session){
+    public ResponseEntity<LogoutResponseDto> logout(){
         DtoMetaData dtoMetaData;
 
         try{
-            authService.logout(session);
+            //authService.logout();
             dtoMetaData = new DtoMetaData("로그아웃 성공");
             return ResponseEntity.ok(new LogoutResponseDto(dtoMetaData));
         }

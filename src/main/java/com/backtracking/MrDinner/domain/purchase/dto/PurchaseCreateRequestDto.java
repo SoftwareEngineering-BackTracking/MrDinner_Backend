@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 public class PurchaseCreateRequestDto {
-
+    private String id;
     private String cardNumber;
     private String bank;
 
