@@ -77,8 +77,8 @@ public class UserSerivce {
 
     // 내 정보 수정
     @Transactional
-    public void updateUser(UserUpdateRequestDto requestDto, HttpSession session) {
-        User user = userRepository.findById((String) session.getAttribute("id")).orElseThrow(() -> new IllegalArgumentException("해당 ID를 가진 유저가 없습니다."));
+    public void updateUser(UserUpdateRequestDto requestDto) {
+        User user = userRepository.findById(requestDto.getId()).orElseThrow(() -> new IllegalArgumentException("해당 ID를 가진 유저가 없습니다."));
 
         user.update(requestDto.getName(), requestDto.getBirth(), requestDto.getPhoneNumber(), requestDto.getEmail(), requestDto.getNickname());
     }

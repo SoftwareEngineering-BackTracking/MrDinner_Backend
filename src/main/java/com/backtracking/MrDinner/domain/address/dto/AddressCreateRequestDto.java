@@ -7,6 +7,7 @@ import lombok.Data;
 
 @Data
 public class AddressCreateRequestDto {
+    private String id;
     private String detail;
 
     public Address toEntity(User userId){

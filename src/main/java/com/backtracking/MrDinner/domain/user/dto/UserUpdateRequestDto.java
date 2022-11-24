@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 public class UserUpdateRequestDto {
-
+    private String id;
     private String name;
     private String birth;
     private String phoneNumber;

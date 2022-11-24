@@ -4,6 +4,7 @@ import lombok.Data;
 
 @Data
 public class PaymentRequestDto {
+    private String id;
     private Long couponNo;
     private Long purchaseNo;
 }

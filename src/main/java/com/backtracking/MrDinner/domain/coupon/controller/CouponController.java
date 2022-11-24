@@ -26,11 +26,11 @@ public class CouponController {
     private final CouponService couponService;
 
     @PostMapping
-    public ResponseEntity<CouponCreateResponseDto> createCoupon(@RequestBody CouponCreateRequestDto requestDto, HttpSession session){
+    public ResponseEntity<CouponCreateResponseDto> createCoupon(@RequestBody CouponCreateRequestDto requestDto){
         DtoMetaData dtoMetaData;
 
         try{
-            couponService.createCoupon(requestDto, session);
+            couponService.createCoupon(requestDto);
             dtoMetaData = new DtoMetaData("쿠폰 생성 완료");
             return ResponseEntity.ok(new CouponCreateResponseDto(dtoMetaData));
         }
@@ -41,12 +41,12 @@ public class CouponController {
     }
 
     @GetMapping
-    public ResponseEntity<CouponFetchResponseDto> fetchCoupon(@RequestHeader Map<String, Long> params, HttpSession session){
+    public ResponseEntity<CouponFetchResponseDto> fetchCoupon(@RequestHeader Map<String, Object> params){
         DtoMetaData dtoMetaData;
-        CouponFetchRequestDto requestDto = new CouponFetchRequestDto(params.get("couponNo"));
+        CouponFetchRequestDto requestDto = new CouponFetchRequestDto((String) params.get("id"),(Long) params.get("couponNo"));
         try{
             if(requestDto.getCouponNo() == null){
-                List<Coupon> CouponList = couponService.fetchMyCoupon(requestDto, session);
+                List<Coupon> CouponList = couponService.fetchMyCoupon(requestDto);
                 dtoMetaData = new DtoMetaData("나의 쿠폰 조회 완료");
                 return ResponseEntity.ok(new CouponFetchResponseDto(dtoMetaData, CouponList));
             }

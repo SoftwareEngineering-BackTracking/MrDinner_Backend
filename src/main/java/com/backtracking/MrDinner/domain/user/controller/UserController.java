@@ -68,11 +68,11 @@ public class UserController {
 
     // 계정 수정
     @PutMapping
-    public ResponseEntity<UserUpdateResponseDto> updateUser(@RequestBody UserUpdateRequestDto requestDto, HttpSession session){
+    public ResponseEntity<UserUpdateResponseDto> updateUser(@RequestBody UserUpdateRequestDto requestDto){
         DtoMetaData dtoMetaData;
 
         try{
-            userSerivce.updateUser(requestDto, session);
+            userSerivce.updateUser(requestDto);
             dtoMetaData = new DtoMetaData("계정 수정 성공");
             return ResponseEntity.ok(new UserUpdateResponseDto(dtoMetaData));
 
