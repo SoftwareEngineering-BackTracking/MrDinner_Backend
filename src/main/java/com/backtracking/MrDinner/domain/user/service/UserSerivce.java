@@ -23,7 +23,6 @@ import java.util.List;
 @RequiredArgsConstructor
 @Service
 public class UserSerivce {
-    private Department department;
     private final UserRepository userRepository;
     private final CartRepository cartRepository;
     private final CartService cartService;
@@ -56,7 +55,7 @@ public class UserSerivce {
         if(requestDto.getName() != null){
             spec = spec.and(UserSpecification.containingUserName(requestDto.getName()));
         }
-        if(requestDto.getDepartment() == department.고객 || requestDto.getDepartment() == department.직원  || requestDto.getDepartment() == department.비회원) {
+        if(requestDto.getDepartment() == Department.고객 || requestDto.getDepartment() == Department.직원  || requestDto.getDepartment() == Department.비회원) {
             spec = spec.and(UserSpecification.equalDepartment(requestDto.getDepartment()));
         }
         List<User> userList = userRepository.findAll(spec);
