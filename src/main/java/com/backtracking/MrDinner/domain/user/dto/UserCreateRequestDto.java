@@ -21,7 +21,6 @@ public class UserCreateRequestDto {
     // 1 -> 직원
     // 2 -> 비회원
     private Department department;
-    private String address;
 
     public User toEntity(){
         return User.builder()

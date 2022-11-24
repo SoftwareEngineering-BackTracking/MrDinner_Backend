@@ -1,8 +1,11 @@
 package com.backtracking.MrDinner.global.security;
 
+import org.springframework.stereotype.Component;
+
 import java.security.SecureRandom;
 import java.util.Date;
 
+@Component
 public class TempCodeGenerator {
 
     public static String generate(char[] charSet, int length){
