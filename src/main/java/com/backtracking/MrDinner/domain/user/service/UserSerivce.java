@@ -32,10 +32,11 @@ public class UserSerivce {
     public void createUser(UserCreateRequestDto requestDto) {
         String email = requestDto.getEmail();
         if(userRepository.existsByEmail(email)){
-            throw new IllegalArgumentException("이미 가입되어 있는 유저입니다. EMAIL: " + email);
+            throw new IllegalArgumentException("이미 가입되어 있는 유저입니다.");
         }
-        userRepository.save(requestDto.toEntity());
-        if(!cartRepository.existsByUserId(requestDto.getId())){
+        User user = requestDto.toEntity();
+        userRepository.save(user);
+        if(!cartRepository.existsByUserId(user)){
             cartService.createCart(requestDto.getId());
         }
     }

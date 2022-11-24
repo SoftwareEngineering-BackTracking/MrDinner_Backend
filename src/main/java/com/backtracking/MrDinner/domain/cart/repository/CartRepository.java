@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface CartRepository extends JpaRepository<Cart, Long> {
     Cart findByUserId(User id);
-    boolean existsByUserId(String id);
+    boolean existsByUserId(User user);
 }
