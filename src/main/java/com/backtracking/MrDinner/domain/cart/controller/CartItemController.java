@@ -56,6 +56,7 @@ public class CartItemController {
     @GetMapping
     public ResponseEntity<CartItemFetchResponseDto> fetchCartItem(@RequestHeader Map<String, String> params){
         DtoMetaData dtoMetaData;
+        System.out.println(params.get("id"));
         CartItemFetchRequestDto requestDto = new CartItemFetchRequestDto(params.get("id"));
         try{
             List<CartItem> cartItemList = cartItemService.fetchCartItem(requestDto);
