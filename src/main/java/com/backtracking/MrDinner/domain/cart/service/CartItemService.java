@@ -71,8 +71,15 @@ public class CartItemService {
     public List<CartItem> fetchCartItem(CartItemFetchRequestDto requestDto) {
         //String id = (String) session.getAttribute("id");
         User user = userRepository.findById(requestDto.getId()).orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
+
         Cart cart = cartRepository.findByUserId(user);
+        if(cart == null){
+            throw new IllegalArgumentException("장바구니가 없습니다.");
+        }
         List<CartItem> cartItems = cartItemRepository.findByCartNo(cart);
+        if(cart == null){
+            throw new IllegalArgumentException("장바구니에 담긴 주문이 없습니다.");
+        }
         return cartItems;
 
     }

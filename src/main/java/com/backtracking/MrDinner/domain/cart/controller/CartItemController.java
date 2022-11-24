@@ -54,8 +54,9 @@ public class CartItemController {
 
 
     @GetMapping
-    public ResponseEntity<CartItemFetchResponseDto> fetchCartItem(CartItemFetchRequestDto requestDto){
+    public ResponseEntity<CartItemFetchResponseDto> fetchCartItem(@RequestHeader Map<String, String> params){
         DtoMetaData dtoMetaData;
+        CartItemFetchRequestDto requestDto = new CartItemFetchRequestDto(params.get("id"));
         try{
             List<CartItem> cartItemList = cartItemService.fetchCartItem(requestDto);
             dtoMetaData = new DtoMetaData("장바구니에 담긴 모든 주문 조회 성공");
