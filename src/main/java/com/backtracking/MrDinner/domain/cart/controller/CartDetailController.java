@@ -39,9 +39,14 @@ public class CartDetailController {
     }
 
     @GetMapping
-    public ResponseEntity<CartDetailFetchResponseDto> fetchCartDetail(@RequestHeader Map<String, Long> params){
+    public ResponseEntity<CartDetailFetchResponseDto> fetchCartDetail(@RequestHeader Map<String, String> params){
         DtoMetaData dtoMetaData;
-        CartDetailFetchRequestDto requestDto = new CartDetailFetchRequestDto((Long) params.get("cartItemNo"));
+        System.out.println(params.keySet());
+        System.out.println(params.values());
+        Long k = Long.parseLong(params.get("cartitemno"));
+
+        CartDetailFetchRequestDto requestDto = new CartDetailFetchRequestDto(k);
+        System.out.println(requestDto.getCartItemNo());
         try{
             List<CartDetail> cartDetailList = cartDetailService.fetchCartDetail(requestDto);
             dtoMetaData = new DtoMetaData("주문 세부사항 조회 성공");

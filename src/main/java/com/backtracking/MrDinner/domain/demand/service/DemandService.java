@@ -112,9 +112,10 @@ public class DemandService {
                     throw new IllegalArgumentException("요리하기에 충분한 재고가 없습니다. 부족한 재고: "+dinnerIngredientLists.get(j).getDinnerIngredient());
                 }
                 quantity = quantity - 1;
-                System.out.println(dinnerIngredientLists.get(j).getDinnerIngredient());
-                dinnerIngredientLists.get(j).update(quantity, dinnerIngredientLists.get(i).getDemandDate());
+                dinnerIngredientLists.get(j).update(quantity, dinnerIngredientLists.get(j).getDemandDate());
             }
+
+            System.out.println("1");
 
             List<StyleIngredientList> styleIngredientLists = styleIngredientRepository.findAllByStyle(cartItemList.get(i).getStyle());
             for(int j = 0 ; j < styleIngredientLists.size() ; j++){
@@ -123,12 +124,14 @@ public class DemandService {
                     throw new IllegalArgumentException("요리하기에 충분한 재고가 없습니다. 부족한 재고: "+styleIngredientLists.get(j).getStyleIngredient());
                 }
                 quantity = quantity - 1;
-                System.out.println(styleIngredientLists.get(j).getStyleIngredient());
-                styleIngredientLists.get(j).update(quantity, dinnerIngredientLists.get(i).getDemandDate());
+                styleIngredientLists.get(j).update(quantity, styleIngredientLists.get(j).getDemandDate());
             }
             DemandItem savedDemandItem = demandItemRepository.saveAndFlush(demandItem);
-
             List<CartDetail> cartDetailList = cartDetailRepository.findAllByCartItemNo(cartItemList.get(i));
+
+            if(cartDetailList.isEmpty()){
+                continue;
+            }
 
             List<DemandDetail> demandDetailList = new ArrayList<>();
             for(int j = 0 ; j < cartDetailList.size() ; j++){
@@ -182,6 +185,7 @@ public class DemandService {
 
         // 장바구니 안 정보 삭제
         for(int i = 0 ; i < cartItemList.size() ; i++){
+            System.out.println("aaaaaa");
             cartDetailRepository.deleteAllByCartItemNo(cartItemList.get(i));
         }
         cartItemRepository.deleteAllByCartNo(cart);
@@ -209,9 +213,21 @@ public class DemandService {
     }
 
     @Transactional
-    public List<Demand> fetchAllDemand(DemandFetchRequestDto requestDto) {
+    public OrderInfo fetchAllDemand(DemandFetchRequestDto requestDto) {
         List<Demand> demandList = demandRepository.findAll();
-        return demandList;
+        List<List<DemandItem>> demandItemList = new ArrayList<>();
+        List<List<DemandDetail>> demandDetailList = new ArrayList<>();
+
+        for(int i = 0 ; i < demandList.size() ; i++){
+            List<DemandItem> demandItem = demandItemRepository.findAllByDemandNo(demandList.get(i));
+            demandItemList.add(demandItem);
+            for(int j = 0; j < demandItem.size() ; j++){
+                List<DemandDetail> demandDetail = demandDetailRepository.findAllByDemandItemNo(demandItem.get(j));
+                demandDetailList.add(demandDetail);
+            }
+        }
+        OrderInfo orderInfo = new OrderInfo(demandList, demandItemList, demandDetailList);
+        return orderInfo;
     }
 
     @Transactional

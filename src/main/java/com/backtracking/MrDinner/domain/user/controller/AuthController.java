@@ -61,9 +61,9 @@ public class AuthController {
         DtoMetaData dtoMetaData;
         LoginRequestDto requestDto = new LoginRequestDto(params.get("id"), params.get("password"));
         try{
-            authService.login(requestDto, session);
+            String token = authService.login(requestDto, session);
             dtoMetaData = new DtoMetaData("로그인 성공");
-            return ResponseEntity.ok(new LoginResponseDto(dtoMetaData));
+            return ResponseEntity.ok(new LoginResponseDto(dtoMetaData, token));
         }
         catch (Exception e){
             dtoMetaData = new DtoMetaData(e.getMessage(), e.getClass().getName());

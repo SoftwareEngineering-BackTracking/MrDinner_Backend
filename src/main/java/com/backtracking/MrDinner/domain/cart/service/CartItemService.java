@@ -46,8 +46,7 @@ public class CartItemService {
 
     @Transactional
     public void createCartItemWithVoice(CartItemVoiceCreateRequestDto requestDto, HttpSession session) throws IOException, InterruptedException, IllegalAccessException {
-        MultipartFile audioFile = requestDto.getAudioFile();
-        String token = (String) session.getAttribute("token");
+        String token = requestDto.getToken();
 
         //String id = (String) session.getAttribute("id");
         User user = userRepository.findById(requestDto.getId()).orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
@@ -55,12 +54,13 @@ public class CartItemService {
         if(cart == null){
             throw new IllegalAccessException("장바구니 생성을 못하였습니다.");
         }
-        //System.out.println("token: "+token);
+        System.out.println("token: "+token);
         // 음성 변환
-        String voiceId = voiceService.generateId(audioFile, token);
+        String voiceId = voiceService.generateId(token);
         Thread.sleep(2000);
+        System.out.println("success generateId");
         DinnerStyleVoice dinnerStyle = voiceService.getMenu(voiceId, token);
-
+        System.out.println("success getMenu");
         DinnerList dinner = dinnerRepository.findById(dinnerStyle.getDinner()).orElseThrow(() -> new IllegalArgumentException("해당 디너가 없습니다."));
         StyleList style = styleRepository.findById(dinnerStyle.getStyle()).orElseThrow(() -> new IllegalArgumentException("해당 스타일이 없습니다."));
         Long price = dinner.getPrice() + style.getPrice();

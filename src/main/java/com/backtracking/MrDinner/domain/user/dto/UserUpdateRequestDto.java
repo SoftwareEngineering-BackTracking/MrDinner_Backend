@@ -11,5 +11,4 @@ public class UserUpdateRequestDto {
     private String phoneNumber;
     private String email;
     private String nickname;
-    private String address;
 }

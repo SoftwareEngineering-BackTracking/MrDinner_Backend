@@ -15,12 +15,14 @@ public class UserFetchResponseDto {
     private String phoneNumber;
     private String email;
     private String nickname;
+    private String birth;
     private Department department;
     private List<User> userList;
 
     public UserFetchResponseDto(DtoMetaData dtoMetaData, User user){
         this.dtoMetaData = dtoMetaData;
         this.name = user.getName();
+        this.birth = user.getBirth();
         this.phoneNumber = user.getPhoneNumber();
         this.email = user.getEmail();
         this.nickname = user.getNickname();
@@ -33,6 +35,7 @@ public class UserFetchResponseDto {
     public UserFetchResponseDto(DtoMetaData dtoMetaData){
         this.dtoMetaData = dtoMetaData;
         this.name = null;
+        this.birth = null;
         this.phoneNumber = null;
         this.email = null;
         this.nickname = null;

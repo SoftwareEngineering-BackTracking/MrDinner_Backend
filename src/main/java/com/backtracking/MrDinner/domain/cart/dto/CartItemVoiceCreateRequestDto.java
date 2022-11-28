@@ -10,7 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Data
 public class CartItemVoiceCreateRequestDto {
     private String id;
-    private MultipartFile audioFile;
+    private String token;
 
     public CartItem toEntity(Cart cartNo, Long price, DinnerList dinnerList, StyleList styleList){
         return CartItem.builder()

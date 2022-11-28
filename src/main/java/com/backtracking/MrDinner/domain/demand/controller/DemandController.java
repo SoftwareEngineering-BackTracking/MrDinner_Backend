@@ -42,9 +42,9 @@ public class DemandController {
         DemandFetchRequestDto requestDto = new DemandFetchRequestDto(params.get("filter"));
         try{
             if(requestDto.getFilter() == null){
-                List<Demand> demandList = demandService.fetchAllDemand(requestDto);
+                OrderInfo demandList = demandService.fetchAllDemand(requestDto);
                 dtoMetaData = new DtoMetaData("전체 주문 조회 완료");
-                return ResponseEntity.ok(new DemandFetchResponseDto(dtoMetaData, demandList));
+                return ResponseEntity.ok(new DemandFetchResponseDto(dtoMetaData, demandList.getDemandList(), demandList.getDemandItemList(), demandList.getDemandDetailList()));
             }
             else {
                 OrderInfo orderInfo = demandService.fetchDemand(requestDto);

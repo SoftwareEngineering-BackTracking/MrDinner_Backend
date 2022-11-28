@@ -38,9 +38,10 @@ public class CartItemController {
 
     @PostMapping
     @RequestMapping("/voice")
-    public ResponseEntity<CartItemVoiceCreateResponseDto> createCartItemWithVoice(CartItemVoiceCreateRequestDto requestDto, HttpSession session){
+    public ResponseEntity<CartItemVoiceCreateResponseDto> createCartItemWithVoice(@RequestBody CartItemVoiceCreateRequestDto requestDto, HttpSession session){
         DtoMetaData dtoMetaData;
-
+        System.out.println(requestDto.getId());
+        System.out.println(requestDto.getToken());
         try{
             cartItemService.createCartItemWithVoice(requestDto, session);
             dtoMetaData = new DtoMetaData("장바구니 중 단일 주문 생성 성공");

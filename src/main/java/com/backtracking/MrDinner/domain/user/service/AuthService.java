@@ -31,7 +31,7 @@ public class AuthService {
     }
 
     @Transactional
-    public void login(LoginRequestDto requestDto, HttpSession session) throws IOException, ParseException {
+    public String login(LoginRequestDto requestDto, HttpSession session) throws IOException, ParseException {
 //        if(session.getAttribute("id") != null){
 //            session.removeAttribute("id");
 //        }
@@ -46,7 +46,7 @@ public class AuthService {
 
         // 음성인식 토큰 생성
         String token = voiceToken.generateToken();
-        session.setAttribute("token", token);
+        return token;
     }
 
     @Transactional

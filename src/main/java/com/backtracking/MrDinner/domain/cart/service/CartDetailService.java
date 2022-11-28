@@ -61,7 +61,10 @@ public class CartDetailService {
     @Transactional
     public List<CartDetail> fetchCartDetail(CartDetailFetchRequestDto requestDto) {
         CartItem cartItem = cartItemRepository.findById(requestDto.getCartItemNo()).orElseThrow(() -> new IllegalArgumentException("해당 주문이 없습니다."));
+        System.out.println(cartItem);
         List<CartDetail> cartDetails = cartDetailRepository.findByCartItemNo(cartItem);
+        System.out.println(cartDetails.get(0));
+
         if(cartDetails.isEmpty()){
             throw new IllegalArgumentException("세부사항이 없습니다.");
         }
